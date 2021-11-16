@@ -5,14 +5,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DetallePedido {
-    private Long idDetalle;
+@Entity
+@Table(name = "order_detail")
+public class OrderDetail {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Integer item;
-    private Producto product;
+    private Product product;
+    private Float price;
     private Double amount;
-    private int discount;
+    private String discount;
+
 }
