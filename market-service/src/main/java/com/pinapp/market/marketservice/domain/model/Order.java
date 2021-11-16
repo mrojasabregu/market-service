@@ -20,7 +20,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idOrder;
     private Long orderNumber;
     private Date date;
     private String state;
