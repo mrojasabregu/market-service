@@ -9,4 +9,5 @@ public interface IOrderDetailService {
     OrderDetail createOrderDetail(OrderDetailRequest orderDetailRequest);
 
 
+    OrderDetail getOrderDetail(Long id);
 }

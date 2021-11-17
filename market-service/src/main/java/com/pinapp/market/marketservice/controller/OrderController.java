@@ -7,10 +7,7 @@ import com.pinapp.market.marketservice.domain.model.OrderDetail;
 import com.pinapp.market.marketservice.service.impl.OrderDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/order")
@@ -27,5 +24,9 @@ public class OrderController {
         return orderDetailService.createOrderDetail( orderDetailrequest );
     }
 
+    @GetMapping(path = "/idOrder/detail/{id}")
+    public OrderDetail retriveDetail(@PathVariable("id") Long id) {
+        return orderDetailService.getOrderDetail(id);
+    }
     
 }
