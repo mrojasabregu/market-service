@@ -2,19 +2,19 @@ package com.pinapp.market.marketservice.domain.mapper;
 
 
 import com.pinapp.market.marketservice.controller.request.OrderDetailRequest;
-import com.pinapp.market.marketservice.domain.model.OrderDetail;
+import com.pinapp.market.marketservice.domain.model.SaleNoteDetail;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
 @Component
-public class OrderDetailMapper implements Function< OrderDetailRequest, OrderDetail> {
+public class OrderDetailMapper implements Function< OrderDetailRequest, SaleNoteDetail> {
 
 
     @Override
-    public OrderDetail apply(OrderDetailRequest orderDetailRequest) {
-        return OrderDetail.builder()
-                .idOrderDetail(orderDetailRequest.getId())
+    public SaleNoteDetail apply(OrderDetailRequest orderDetailRequest) {
+        return SaleNoteDetail.builder()
+                .id(orderDetailRequest.getId())
                 .item(orderDetailRequest.getItem())
                 //.product(orderDetailRequest.getProduct())
                 .price(orderDetailRequest.getPrice())

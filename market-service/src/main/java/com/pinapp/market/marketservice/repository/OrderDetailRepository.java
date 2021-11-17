@@ -1,9 +1,9 @@
 package com.pinapp.market.marketservice.repository;
 
-import com.pinapp.market.marketservice.domain.model.OrderDetail;
+import com.pinapp.market.marketservice.domain.model.SaleNoteDetail;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface OrderDetailRepository  extends CrudRepository<OrderDetail, Long> {
-
-
+@Repository
+public interface OrderDetailRepository extends CrudRepository<SaleNoteDetail, Long> {
 }

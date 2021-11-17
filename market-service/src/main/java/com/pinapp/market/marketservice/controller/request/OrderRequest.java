@@ -2,7 +2,7 @@ package com.pinapp.market.marketservice.controller.request;
 
 import com.pinapp.market.marketservice.domain.model.Address;
 import com.pinapp.market.marketservice.domain.model.Client;
-import com.pinapp.market.marketservice.domain.model.OrderDetail;
+import com.pinapp.market.marketservice.domain.model.SaleNoteDetail;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,6 +19,6 @@ public class OrderRequest {
     private String state;
     private Client idCliente;
     private Address idAddress;
-    private List<OrderDetail> details;
+    private List<SaleNoteDetail> details;
 
 }
