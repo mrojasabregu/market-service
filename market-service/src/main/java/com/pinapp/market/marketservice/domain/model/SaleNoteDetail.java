@@ -1,5 +1,6 @@
 package com.pinapp.market.marketservice.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,19 +13,18 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "order_detail")
-public class OrderDetail {
-
+public class SaleNoteDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idOrderDetail;
+    private Long id;
     private Integer item;
-  //  private Product product;
+    private String sku;
     private Float price;
     private Double amount;
     private String discount;
-    @ManyToOne
-    @JoinColumn(name = "idOrder")
-    private Order order;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SALE_NOTE_ID")
+    @JsonBackReference("details")
+    private SaleNote saleNote;
 
 }

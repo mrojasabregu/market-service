@@ -10,22 +10,25 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
 @Data
-@Table(name = "order")
-public class Order {
-
+@Entity
+@Table(name = "SALE_NOTE")
+public class SaleNote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idOrder;
+    @Column(name = "SALE_NOTE_ID")
+    private Long id;
     private Long orderNumber;
     private Date date;
     private String state;
-    private Client idCliente;
-    private Address idAddress;
-    private List<OrderDetail> details;
+    private String documentNumber;
+    private String documentType;
+    private Long idAddress;
+    @OneToMany(mappedBy="saleNote", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SaleNoteDetail> details;
 
 }
