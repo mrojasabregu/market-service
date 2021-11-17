@@ -9,12 +9,12 @@ public class OrderMapper implements Function<OrderRequest, Order> {
 
     public Order apply(OrderRequest orderRequest){
         return Order.builder()
-                .id(orderRequest.getId())
+                .idOrder(orderRequest.getId())
                 .orderNumber(orderRequest.getOrderNumber())
                 .date(orderRequest.getDate())
                 .state(orderRequest.getState())
-                .idCliente(orderRequest.getIdCliente())
-                .idAddress(orderRequest.getIdAddress())
+               // .idCliente(orderRequest.getIdCliente())
+               // .idAddress(orderRequest.getIdAddress())
                 .details(orderRequest.getDetails())
                 .build();
     }

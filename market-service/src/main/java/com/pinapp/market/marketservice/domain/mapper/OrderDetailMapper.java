@@ -14,9 +14,9 @@ public class OrderDetailMapper implements Function< OrderDetailRequest, OrderDet
     @Override
     public OrderDetail apply(OrderDetailRequest orderDetailRequest) {
         return OrderDetail.builder()
-                .id(orderDetailRequest.getId())
+                .idOrderDetail(orderDetailRequest.getId())
                 .item(orderDetailRequest.getItem())
-                .product(orderDetailRequest.getProduct())
+                //.product(orderDetailRequest.getProduct())
                 .price(orderDetailRequest.getPrice())
                 .amount(orderDetailRequest.getAmount())
                 .discount(orderDetailRequest.getDiscount())

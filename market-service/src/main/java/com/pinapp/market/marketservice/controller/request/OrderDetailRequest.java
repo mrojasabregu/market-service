@@ -11,7 +11,7 @@ public class OrderDetailRequest{
 
     private Long id;
     private Integer item;
-    private Product product;
+//    private Product product;
     private Float price;
     private Double amount;
     private String discount;
