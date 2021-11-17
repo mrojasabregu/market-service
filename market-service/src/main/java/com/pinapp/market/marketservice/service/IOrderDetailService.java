@@ -1,13 +1,13 @@
 package com.pinapp.market.marketservice.service;
 
 import com.pinapp.market.marketservice.controller.request.OrderDetailRequest;
-import com.pinapp.market.marketservice.domain.model.OrderDetail;
+import com.pinapp.market.marketservice.domain.model.SaleNoteDetail;
 
 public interface IOrderDetailService {
 
 
-    OrderDetail createOrderDetail(OrderDetailRequest orderDetailRequest);
+    SaleNoteDetail createOrderDetail(OrderDetailRequest orderDetailRequest);
 
 
-    OrderDetail getOrderDetail(Long id);
+    SaleNoteDetail getOrderDetail(Long id);
 }
