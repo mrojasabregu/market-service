@@ -29,6 +29,6 @@ public class SaleNote {
     private String documentType;
     private Long idAddress;
     @OneToMany(mappedBy="saleNote", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SaleNoteDetail> details;
+    private List<Detail> details;
 
 }
