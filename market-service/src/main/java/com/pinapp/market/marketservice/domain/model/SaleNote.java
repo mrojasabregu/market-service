@@ -30,6 +30,6 @@ public class SaleNote {
     private Long idAddress;
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "SALE_NOTE_ID")
-    private List<SaleNoteDetail> details;
+    private List<Detail> details;
 
 }
