@@ -1,7 +1,6 @@
 package com.pinapp.market.marketservice.controller.request;
 
 import com.pinapp.market.marketservice.domain.model.Address;
-import com.pinapp.market.marketservice.domain.model.Client;
 import com.pinapp.market.marketservice.domain.model.SaleNoteDetail;
 import lombok.Builder;
 import lombok.Data;
@@ -11,14 +10,15 @@ import java.util.List;
 
 @Builder
 @Data
-public class OrderRequest {
+public class SaleNoteRequest {
 
     private Long id;
     private Long orderNumber;
     private Date date;
     private String state;
-    private Client idCliente;
-    private Address idAddress;
+    private String documentNumber;
+    private String documentType;
+    private Long idAddress;
     private List<SaleNoteDetail> details;
 
 }
