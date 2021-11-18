@@ -26,9 +26,9 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
 
 
     public SaleNote getSaleNote(Long id){
-        Optional<SaleNote> order =  saleNoteRepository.findById(id);
-        if(order.isPresent()){
-            return order.get();
+        Optional<SaleNote> saleNote =  saleNoteRepository.findById(id);
+        if(saleNote.isPresent()){
+            return saleNote.get();
         }else{
             return null;
         }
@@ -45,23 +45,26 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         return  saleNoteNew;
     }
 
-    public SaleNote editSaleNote(Long id, SaleNoteRequest saleNoteRequest){
+    public String editSaleNote(Long id, SaleNoteRequest saleNoteRequest){
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if(saleNoteBD.isPresent()){
             saleNoteActu = saleNoteBD.get();
+            saleNoteActu.setOrderNumber(saleNoteRequest.getOrderNumber());
+            saleNoteActu.setDate(saleNoteRequest.getDate());
+            saleNoteActu.setDocumentNumber(saleNoteRequest.getDocumentNumber());
+            saleNoteActu.setDocumentType(saleNoteRequest.getDocumentType());
+            saleNoteActu.setIdAddress(saleNoteRequest.getIdAddress());
         }
-        saleNoteActu.setOrderNumber(saleNoteRequest.getOrderNumber());
-        saleNoteActu.setDate(saleNoteRequest.getDate());
-        saleNoteActu.setDocumentNumber(saleNoteRequest.getDocumentNumber());
-        saleNoteActu.setDocumentType(saleNoteRequest.getDocumentType());
-        saleNoteActu.setIdAddress(saleNoteRequest.getIdAddress());
+        if(saleNoteActu != null) {
+            saleNoteRepository.save(saleNoteActu);
+            return "Se actualizo con exito";
+        }
 
-        saleNoteRepository.save(saleNoteActu);
-        return saleNoteActu;
+        return "El objeto no se actualizo correctamente (NULL)";
     }
 
-    public List<SaleNote> getsSaleNotes(){
+    public Iterable<SaleNote> getsSaleNotes(){
         return saleNoteRepository.findAll();
     }
 }

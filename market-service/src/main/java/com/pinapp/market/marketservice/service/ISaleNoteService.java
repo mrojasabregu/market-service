@@ -11,7 +11,7 @@ public interface ISaleNoteService {
 
     SaleNote getSaleNote(Long id);
 
-    SaleNote editSaleNote(Long id, SaleNoteRequest saleNoteRequest);
+    String editSaleNote(Long id, SaleNoteRequest saleNoteRequest);
 
-    List<SaleNote> getsSaleNotes();
+    Iterable<SaleNote> getsSaleNotes();
 }

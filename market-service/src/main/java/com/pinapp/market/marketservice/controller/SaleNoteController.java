@@ -11,11 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/saleNote")
-public class OrderController {
+public class SaleNoteController {
 
     @Autowired
     private IOrderDetailService orderDetailService;
@@ -33,27 +32,6 @@ public class OrderController {
         return orderDetailService.getOrderDetail(id);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @PostMapping(path = "/")
     public SaleNote crearSaleNote(@RequestBody SaleNoteRequest saleNoteRequest){
         return saleNoteService.createSaleNote(saleNoteRequest);
@@ -65,12 +43,12 @@ public class OrderController {
     }
 
     @PutMapping(path = "/{id}")
-    public SaleNote editSaleNote(@PathVariable("id") Long id, @RequestBody SaleNoteRequest saleNoteRequest){
+    public String editSaleNote(@PathVariable("id") Long id, @RequestBody SaleNoteRequest saleNoteRequest){
         return saleNoteService.editSaleNote(id, saleNoteRequest);
     }
 
-    @GetMapping(path = "")
-    public List<SaleNote> getSaleNotes(){
+    @GetMapping()
+    public Iterable<SaleNote> getSaleNotes(){
         return saleNoteService.getsSaleNotes();
     }
 }
