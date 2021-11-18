@@ -12,5 +12,6 @@ public interface IDetailService {
 
     Detail getDetail(Long id);
 
-    SaleNoteDetail getOrderDetail(Long id);
+    String editDetail(Long id, DetailRequest detailRequest);
+
 }
