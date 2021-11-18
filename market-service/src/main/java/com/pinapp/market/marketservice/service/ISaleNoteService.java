@@ -13,5 +13,9 @@ public interface ISaleNoteService {
 
     String editSaleNote(Long id, SaleNoteRequest saleNoteRequest);
 
-    Iterable<SaleNote> getsSaleNotes();
+    List<SaleNote> getsSaleNotesInProcess();
+
+    List<SaleNote> getSaleNoteCanceled();
+
+    String changeState(Long id, SaleNoteRequest saleNoteRequest);
 }

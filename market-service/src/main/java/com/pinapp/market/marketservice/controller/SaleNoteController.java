@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping(path = "/saleNote")
@@ -48,7 +50,17 @@ public class SaleNoteController {
     }
 
     @GetMapping
-    public Iterable<SaleNote> getSaleNotes(){
-        return saleNoteService.getsSaleNotes();
+    public List<SaleNote> getSaleNotes(){
+        return saleNoteService.getsSaleNotesInProcess();
+    }
+
+    @GetMapping(path = "/canceled")
+    public List<SaleNote> getSaleNotesAnulados(){
+        return saleNoteService.getSaleNoteCanceled();
+    }
+
+    @PutMapping(path = "/{id}/cancel")
+    public String changeState(@PathVariable("id") Long id, @RequestBody SaleNoteRequest saleNoteRequest){
+        return saleNoteService.changeState(id, saleNoteRequest);
     }
 }

@@ -1,5 +1,6 @@
 package com.pinapp.market.marketservice.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
@@ -65,7 +66,28 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         return "El objeto no se actualizo correctamente (NULL)";
     }
 
-    public Iterable<SaleNote> getsSaleNotes(){
-        return saleNoteRepository.findAll();
+    public List<SaleNote> getsSaleNotesInProcess(){
+        return saleNoteRepository.getState();
+    }
+
+    public List<SaleNote> getSaleNoteCanceled(){
+        return saleNoteRepository.getStateCanceled();
+    }
+
+    public String changeState(Long id, SaleNoteRequest saleNoteRequest){
+        SaleNote saleNoteActu = null;
+        Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
+        if(saleNoteBD.isPresent()) {
+            saleNoteActu = saleNoteBD.get();
+            saleNoteActu.setState("Canceled");
+        }
+        if(saleNoteActu != null) {
+            saleNoteRepository.save(saleNoteActu);
+            log.info("Se actualizo con éxito");
+            return "Se actualizo con éxito";
+        }
+
+        log.info("El objeto no se actualizo correctamente (NULL)");
+        return "El objeto no se actualizo correctamente (NULL)";
     }
 }
