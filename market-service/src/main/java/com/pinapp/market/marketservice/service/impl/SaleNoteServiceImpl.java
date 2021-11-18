@@ -39,7 +39,6 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         SaleNote saleNoteNew;
         SaleNote saleNote = saleNoteMapper.apply(saleNoteRequest);
         saleNoteNew = saleNote;
-        //saleNoteNew.setDetails(null);
         saleNoteRepository.save(saleNoteNew);
 
         return  saleNoteNew;
