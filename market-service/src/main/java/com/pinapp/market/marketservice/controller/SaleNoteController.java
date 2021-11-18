@@ -47,7 +47,7 @@ public class SaleNoteController {
         return saleNoteService.editSaleNote(id, saleNoteRequest);
     }
 
-    @GetMapping()
+    @GetMapping
     public Iterable<SaleNote> getSaleNotes(){
         return saleNoteService.getsSaleNotes();
     }

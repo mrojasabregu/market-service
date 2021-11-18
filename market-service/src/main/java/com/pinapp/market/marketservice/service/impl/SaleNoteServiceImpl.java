@@ -1,7 +1,5 @@
 package com.pinapp.market.marketservice.service.impl;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
@@ -9,10 +7,12 @@ import com.pinapp.market.marketservice.domain.mapper.SaleNoteMapper;
 import com.pinapp.market.marketservice.domain.model.SaleNote;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+@Slf4j
 @Service
 public class SaleNoteServiceImpl implements ISaleNoteService {
 
@@ -29,14 +29,13 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         Optional<SaleNote> saleNote =  saleNoteRepository.findById(id);
         if(saleNote.isPresent()){
             return saleNote.get();
-        }else{
-            return null;
         }
+        return null;
     }
 
     public SaleNote createSaleNote(SaleNoteRequest saleNoteRequest){
 
-        SaleNote saleNoteNew = null;
+        SaleNote saleNoteNew;
         SaleNote saleNote = saleNoteMapper.apply(saleNoteRequest);
         saleNoteNew = saleNote;
         saleNoteNew.setDetails(null);
@@ -58,9 +57,11 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         }
         if(saleNoteActu != null) {
             saleNoteRepository.save(saleNoteActu);
-            return "Se actualizo con exito";
+            log.info("Se actualizo con éxito");
+            return "Se actualizo con éxito";
         }
 
+        log.info("El objeto no se actualizo correctamente (NULL)");
         return "El objeto no se actualizo correctamente (NULL)";
     }
 
