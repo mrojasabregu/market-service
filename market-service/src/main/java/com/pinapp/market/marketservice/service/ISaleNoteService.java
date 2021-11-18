@@ -1,11 +1,17 @@
 package com.pinapp.market.marketservice.service;
 
-import com.pinapp.market.marketservice.controller.request.OrderRequest;
+import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
 import com.pinapp.market.marketservice.domain.model.SaleNote;
+
+import java.util.List;
 
 public interface ISaleNoteService {
 
-    SaleNote createSaleNote(OrderRequest orderRequest);
+    SaleNote createSaleNote(SaleNoteRequest orderRequest);
 
-    SaleNote getOrder(Long id);
+    SaleNote getSaleNote(Long id);
+
+    SaleNote editSaleNote(Long id, SaleNoteRequest saleNoteRequest);
+
+    List<SaleNote> getsSaleNotes();
 }

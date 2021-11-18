@@ -10,14 +10,15 @@ import java.util.List;
 
 @Builder
 @Data
-public class OrderRequest {
+public class SaleNoteRequest {
 
     private Long id;
     private Long orderNumber;
     private Date date;
     private String state;
-    //private Client idCliente;
-    private Address idAddress;
+    private String documentNumber;
+    private String documentType;
+    private Long idAddress;
     private List<SaleNoteDetail> details;
 
 }

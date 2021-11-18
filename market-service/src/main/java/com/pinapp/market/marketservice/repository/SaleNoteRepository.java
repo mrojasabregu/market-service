@@ -5,10 +5,14 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface SaleNoteRepository extends CrudRepository<SaleNote, Long>{
 
-    List<SaleNote> findByIdSaleNote(Long id);
+    Optional<SaleNote> findById(Long id);
+
+    List<SaleNote> findAll();
+
 }
