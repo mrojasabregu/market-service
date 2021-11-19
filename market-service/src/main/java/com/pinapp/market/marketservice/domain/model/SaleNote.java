@@ -28,8 +28,7 @@ public class SaleNote {
     private String documentNumber;
     private String documentType;
     private Long idAddress;
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "SALE_NOTE_ID")
+    @OneToMany(mappedBy="saleNote", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SaleNoteDetail> details;
 
 }
