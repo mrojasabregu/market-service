@@ -22,7 +22,7 @@ public class Detail {
     private Float price;
     private Double amount;
     private String discount;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne( fetch = FetchType.LAZY)
     @JoinColumn(name = "SALE_NOTE_ID")
     @JsonBackReference("details")
     private SaleNote saleNote;

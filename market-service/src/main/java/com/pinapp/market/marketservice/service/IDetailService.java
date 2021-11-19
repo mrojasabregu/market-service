@@ -14,4 +14,5 @@ public interface IDetailService {
 
     String editDetail(Long id, DetailRequest detailRequest);
 
+    String deleteDetail(Long idSaleNote, Long idDetail);
 }

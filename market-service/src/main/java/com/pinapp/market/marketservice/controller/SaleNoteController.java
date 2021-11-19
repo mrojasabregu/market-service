@@ -46,6 +46,15 @@ public class SaleNoteController {
     }
 
 
+    //DELETE /pedido/{idPedido}/detalle/{idDetalle}
+    @Operation( summary = "Elimina un detalle de un pedido determinado")
+    @DeleteMapping(path = "/{idSaleNote}/detail/{idDetail}")
+    public String deleteDetail(@PathVariable Long idSaleNote, @PathVariable Long idDetail) {
+        return this.detailService.deleteDetail(idSaleNote, idDetail);
+    }
+
+
+
     @PostMapping(path = "/")
     public SaleNote crearSaleNote(@RequestBody SaleNoteRequest saleNoteRequest) {
         return saleNoteService.createSaleNote(saleNoteRequest);

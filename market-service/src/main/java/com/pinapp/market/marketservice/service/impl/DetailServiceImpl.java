@@ -9,8 +9,11 @@ import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.IDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -80,5 +83,38 @@ public class DetailServiceImpl implements IDetailService {
         log.info("El DETALLE no se actualizo correctamente (NULL)");
         return "El DETALLE no se actualizo correctamente (NULL)";
     }
+
+    @Transactional
+    @Modifying
+    public String deleteDetail(Long idSaleNote, Long idDetail)
+    {
+        Optional<SaleNote> saleNoteOP = saleNoteRepository.findById(idSaleNote);
+        if (saleNoteOP.isPresent()) {
+            SaleNote sn = saleNoteOP.get();
+            Optional<Detail>  d = sn.getDetails().stream().filter( e -> e.getId().equals(idDetail)).findFirst() ;
+
+            if( d.isPresent())
+            {
+               // List<Detail> dl = sn.getDetails();
+               // dl.remove()
+                Detail dd= d.get();
+                detailRepository.delete(dd);
+
+                log.info("Se elimino el detalle con exito");
+                return null;
+            }else
+            {
+                log.error("no se encontro el detalle");
+                // TODO: lanzar una excepcion
+                return null;
+            }
+
+        } else {
+            log.error("no se encontro el pedido");
+            // TODO: lanzar una excepcion
+            return null;
+        }
+    }
+
 
 }
