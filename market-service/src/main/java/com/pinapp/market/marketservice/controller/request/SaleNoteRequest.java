@@ -1,7 +1,6 @@
 package com.pinapp.market.marketservice.controller.request;
 
-import com.pinapp.market.marketservice.domain.model.Address;
-import com.pinapp.market.marketservice.domain.model.SaleNoteDetail;
+import com.pinapp.market.marketservice.domain.model.Detail;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,6 +18,6 @@ public class SaleNoteRequest {
     private String documentNumber;
     private String documentType;
     private Long idAddress;
-    private List<SaleNoteDetail> details;
+    private List<Detail> details;
 
 }
