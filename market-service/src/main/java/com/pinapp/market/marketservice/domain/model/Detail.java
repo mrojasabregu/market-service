@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class SaleNoteDetail {
+public class Detail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
