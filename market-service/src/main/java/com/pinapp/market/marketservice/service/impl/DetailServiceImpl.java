@@ -3,7 +3,9 @@ package com.pinapp.market.marketservice.service.impl;
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
 import com.pinapp.market.marketservice.domain.mapper.DetailMapper;
 import com.pinapp.market.marketservice.domain.model.Detail;
+import com.pinapp.market.marketservice.domain.model.SaleNote;
 import com.pinapp.market.marketservice.repository.DetailRepository;
+import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.IDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class DetailServiceImpl implements IDetailService {
 
     @Autowired
     private DetailRepository detailRepository;
+
+    @Autowired
+    private SaleNoteRepository saleNoteRepository;
 
 
     public Detail getDetail(Long id) {
@@ -40,6 +45,10 @@ public class DetailServiceImpl implements IDetailService {
         Detail detail = detailMapper.apply(detailRequest);
         detailNew = detail;
         detailNew.setId(null);
+        if(detailRequest.getSaleNote() != null){
+            Optional<SaleNote> sale = saleNoteRepository.findById(detailRequest.getSaleNote().getId());
+            detailNew.setSaleNote(sale.get());
+        }
         detailRepository.save(detailNew);
         log.info("Se cargo el DETALLE  con éxito");
 

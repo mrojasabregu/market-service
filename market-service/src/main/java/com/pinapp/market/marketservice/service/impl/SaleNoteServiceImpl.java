@@ -39,7 +39,6 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         SaleNote saleNoteNew;
         SaleNote saleNote = saleNoteMapper.apply(saleNoteRequest);
         saleNoteNew = saleNote;
-        saleNoteNew.setDetails(null);
         saleNoteRepository.save(saleNoteNew);
 
         return  saleNoteNew;
@@ -50,11 +49,11 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if(saleNoteBD.isPresent()){
             saleNoteActu = saleNoteBD.get();
-            saleNoteActu.setOrderNumber(saleNoteRequest.getOrderNumber());
-            saleNoteActu.setDate(saleNoteRequest.getDate());
-            saleNoteActu.setDocumentNumber(saleNoteRequest.getDocumentNumber());
-            saleNoteActu.setDocumentType(saleNoteRequest.getDocumentType());
-            saleNoteActu.setIdAddress(saleNoteRequest.getIdAddress());
+            if(saleNoteRequest.getOrderNumber() != null){saleNoteActu.setOrderNumber(saleNoteRequest.getOrderNumber());}
+            if(saleNoteRequest.getDate() != null){saleNoteActu.setDate(saleNoteRequest.getDate());}
+            if(saleNoteRequest.getDocumentNumber() != null){saleNoteActu.setDocumentNumber(saleNoteRequest.getDocumentNumber());}
+            if(saleNoteRequest.getDocumentType() != null){saleNoteActu.setDocumentType(saleNoteRequest.getDocumentType());}
+            if(saleNoteRequest.getIdAddress() != null){saleNoteActu.setIdAddress(saleNoteRequest.getIdAddress());}
         }
         if(saleNoteActu != null) {
             saleNoteRepository.save(saleNoteActu);
