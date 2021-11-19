@@ -7,13 +7,14 @@ import com.pinapp.market.marketservice.domain.model.SaleNote;
 import com.pinapp.market.marketservice.domain.model.Detail;
 import com.pinapp.market.marketservice.service.IDetailService;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
-import com.pinapp.market.marketservice.service.impl.DetailServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*") // acceso desde distintos origenes
 
 @RestController
 @RequestMapping(path = "/saleNote")
@@ -26,17 +27,19 @@ public class SaleNoteController {
     private ISaleNoteService saleNoteService;
 
 
-
+    @Operation (summary = "Devuelve el detalle de compra de un item del pedido")
     @GetMapping(path = "/detail/{id}")
     public Detail retrieveDetail(@PathVariable("id") Long id) {
         return detailService.getDetail(id);
     }
 
+    @Operation (summary = "Genera un detalle de compra en el pedido")
     @PostMapping(path = "/detail")
     public Detail createDetail(@Validated @RequestBody DetailRequest detailrequest) {
         return detailService.createDetail(detailrequest);
     }
 
+    @Operation (summary = "Cambia un valor en el detalle de compra del pedido")
     @PutMapping(path = "/detail/{id}")
     public String editDetail(@PathVariable("id") Long id, @RequestBody DetailRequest detailRequest) {
         return detailService.editDetail(id, detailRequest);
