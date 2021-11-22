@@ -66,14 +66,19 @@ public class SaleNoteController {
         return saleNoteService.getsSaleNotesInProcess();
     }
 
-    @GetMapping(path = "/canceled")
+    @GetMapping(path = "/cancelled")
     public List<SaleNote> getSaleNotesAnulados() {
         return saleNoteService.getSaleNoteCanceled();
     }
 
     @PutMapping(path = "/{id}/cancel")
-    public String changeState(@PathVariable("id") Long id, @RequestBody SaleNoteRequest saleNoteRequest) {
-        return saleNoteService.changeState(id, saleNoteRequest);
+    public String saleNoteCancelled(@PathVariable("id") Long id, @RequestBody SaleNoteRequest saleNoteRequest) {
+        return saleNoteService.saleNoteCancelled(id, saleNoteRequest);
+    }
+
+    @PutMapping(path = "/{id}/issue")
+    public void saleNoteIssued(@PathVariable("id") Long id, @RequestBody SaleNoteRequest saleNoteRequest) {
+        saleNoteService.saleNoteIssued(id, saleNoteRequest);
     }
 
 

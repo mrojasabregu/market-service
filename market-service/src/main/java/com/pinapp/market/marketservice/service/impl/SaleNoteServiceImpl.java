@@ -1,10 +1,13 @@
 package com.pinapp.market.marketservice.service.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteMapper;
+import com.pinapp.market.marketservice.domain.model.Detail;
 import com.pinapp.market.marketservice.domain.model.SaleNote;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
@@ -73,7 +76,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         return saleNoteRepository.getStateCanceled();
     }
 
-    public String changeState(Long id, SaleNoteRequest saleNoteRequest){
+    public String saleNoteCancelled(Long id, SaleNoteRequest saleNoteRequest){
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if(saleNoteBD.isPresent()) {
@@ -88,5 +91,31 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
 
         log.info("El objeto no se actualizo correctamente (NULL)");
         return "El objeto no se actualizo correctamente (NULL)";
+    }
+
+    public void saleNoteIssued(Long id, SaleNoteRequest saleNoteRequest){
+        BigDecimal subtotal = BigDecimal.ZERO;
+        SaleNote saleNoteActu = null;
+        Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
+        if(saleNoteBD.isPresent()) {
+            saleNoteActu = saleNoteBD.get();
+            if(saleNoteActu.getDetails().size() != 0){
+                saleNoteActu.setState("Issued");
+                for(Detail detail : saleNoteActu.getDetails()){
+                    subtotal = subtotal.add(detail.getSubtotal());
+                }
+                saleNoteActu.setTotal(subtotal);
+
+            }else{
+                log.info("El pedido debe contener al menos un detalle para poder emitirse");
+                log.error("El pedido no se pudo emitir");
+            }
+        }
+        if(saleNoteActu != null) {
+            saleNoteRepository.save(saleNoteActu);
+            log.info("Se emitió el pedido con éxito");
+        }else{
+            log.error("El pedido no se pudo emitir");
+        }
     }
 }

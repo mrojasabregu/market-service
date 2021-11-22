@@ -17,5 +17,7 @@ public interface ISaleNoteService {
 
     List<SaleNote> getSaleNoteCanceled();
 
-    String changeState(Long id, SaleNoteRequest saleNoteRequest);
+    String saleNoteCancelled(Long id, SaleNoteRequest saleNoteRequest);
+
+    void saleNoteIssued(Long id, SaleNoteRequest saleNoteRequest);
 }
