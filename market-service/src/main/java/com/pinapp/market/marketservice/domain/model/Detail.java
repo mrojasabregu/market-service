@@ -1,26 +1,27 @@
 package com.pinapp.market.marketservice.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "DETAIL")
 public class Detail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer item;
     private String sku;
-    private Float price;
-    private Double amount;
+    private BigDecimal price;
+    private BigDecimal amount;
+    private BigDecimal subtotal;
     private String discount;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SALE_NOTE_ID")
