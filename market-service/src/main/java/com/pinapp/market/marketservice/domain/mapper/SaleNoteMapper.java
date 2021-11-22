@@ -19,6 +19,7 @@ public class SaleNoteMapper implements Function<SaleNoteRequest, SaleNote> {
                 .documentType(saleNoteRequest.getDocumentType())
                 .idAddress(saleNoteRequest.getIdAddress())
                 .details(saleNoteRequest.getDetails())
+                .total(saleNoteRequest.getTotal())
                 .build();
     }
 
