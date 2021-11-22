@@ -5,22 +5,19 @@ spring:
   application:
     name: market-service
   datasource:
-    url: jdbc:h2:mem:mydb
-    username: sa
+    url: jdbc:mysql://35.222.177.16:3306/db_market_service
+    username: user
     password: password
-    driverClassName: org.h2.Driver
-    jpa:
-      spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
-      hibernate:
-        ddl-auto: create-drop
-      properties:
-        hibernate.show_sql: true
-        hibernate.use_sql_comments: true
-        hibernate.format_sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate.show_sql: true
+      hibernate.use_sql_comments: true
+      hibernate.format_sql: true
+
 
 logging:
   level:
