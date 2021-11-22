@@ -42,6 +42,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         SaleNote saleNoteNew;
         SaleNote saleNote = saleNoteMapper.apply(saleNoteRequest);
         saleNoteNew = saleNote;
+        saleNoteNew.setState("INPROCESS");
         saleNoteRepository.save(saleNoteNew);
 
         return  saleNoteNew;
@@ -81,7 +82,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if(saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
-            saleNoteActu.setState("Cancelled");
+            saleNoteActu.setState("CANCELLED");
         }
         if(saleNoteActu != null) {
             saleNoteRepository.save(saleNoteActu);
@@ -100,7 +101,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         if(saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
             if(saleNoteActu.getDetails().size() != 0){
-                saleNoteActu.setState("Issued");
+                saleNoteActu.setState("ISSUED");
                 for(Detail detail : saleNoteActu.getDetails()){
                     subtotal = subtotal.add(detail.getSubtotal());
                 }
