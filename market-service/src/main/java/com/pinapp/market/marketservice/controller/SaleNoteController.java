@@ -41,7 +41,7 @@ public class SaleNoteController {
 
     @Operation (summary = "Cambia un valor en el detalle de compra del pedido")
     @PutMapping(path = "/detail/{id}")
-    public String editDetail(@PathVariable("id") Long id, @RequestBody DetailRequest detailRequest) {
+    public Boolean editDetail(@PathVariable("id") Long id, @RequestBody DetailRequest detailRequest) {
         return detailService.editDetail(id, detailRequest);
     }
 
@@ -57,7 +57,7 @@ public class SaleNoteController {
     }
 
     @PutMapping(path = "/{id}")
-    public String editSaleNote(@PathVariable("id") Long id, @RequestBody SaleNoteRequest saleNoteRequest) {
+    public Boolean editSaleNote(@PathVariable("id") Long id, @RequestBody SaleNoteRequest saleNoteRequest) {
         return saleNoteService.editSaleNote(id, saleNoteRequest);
     }
 
@@ -71,14 +71,14 @@ public class SaleNoteController {
         return saleNoteService.getSaleNoteCanceled();
     }
 
-    @PutMapping(path = "/{id}/cancel")
-    public String saleNoteCancelled(@PathVariable("id") Long id, @RequestBody SaleNoteRequest saleNoteRequest) {
-        return saleNoteService.saleNoteCancelled(id, saleNoteRequest);
+    @GetMapping(path = "/{id}/cancel")
+    public Boolean saleNoteCancelled(@PathVariable("id") Long id) {
+        return saleNoteService.saleNoteCancelled(id);
     }
 
-    @PutMapping(path = "/{id}/issue")
-    public void saleNoteIssued(@PathVariable("id") Long id, @RequestBody SaleNoteRequest saleNoteRequest) {
-        saleNoteService.saleNoteIssued(id, saleNoteRequest);
+    @GetMapping(path = "/{id}/issue")
+    public void saleNoteIssued(@PathVariable("id") Long id) {
+        saleNoteService.saleNoteIssued(id);
     }
 
 

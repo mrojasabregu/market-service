@@ -47,7 +47,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         return  saleNoteNew;
     }
 
-    public String editSaleNote(Long id, SaleNoteRequest saleNoteRequest){
+    public Boolean editSaleNote(Long id, SaleNoteRequest saleNoteRequest){
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if(saleNoteBD.isPresent()){
@@ -61,11 +61,11 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         if(saleNoteActu != null) {
             saleNoteRepository.save(saleNoteActu);
             log.info("Se actualizo con éxito");
-            return "Se actualizo con éxito";
+            return true;
         }
 
         log.info("El objeto no se actualizo correctamente (NULL)");
-        return "El objeto no se actualizo correctamente (NULL)";
+        return false;
     }
 
     public List<SaleNote> getsSaleNotesInProcess(){
@@ -76,24 +76,24 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         return saleNoteRepository.getStateCanceled();
     }
 
-    public String saleNoteCancelled(Long id, SaleNoteRequest saleNoteRequest){
+    public Boolean saleNoteCancelled(Long id){
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if(saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
-            saleNoteActu.setState("Canceled");
+            saleNoteActu.setState("Cancelled");
         }
         if(saleNoteActu != null) {
             saleNoteRepository.save(saleNoteActu);
             log.info("Se actualizo con éxito");
-            return "Se actualizo con éxito";
+            return true;
         }
 
         log.info("El objeto no se actualizo correctamente (NULL)");
-        return "El objeto no se actualizo correctamente (NULL)";
+        return null;
     }
 
-    public void saleNoteIssued(Long id, SaleNoteRequest saleNoteRequest){
+    public void saleNoteIssued(Long id){
         BigDecimal subtotal = BigDecimal.ZERO;
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);

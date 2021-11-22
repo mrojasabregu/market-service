@@ -55,7 +55,7 @@ public class DetailServiceImpl implements IDetailService {
         return detailNew;
     }
 
-    public String editDetail(Long id, DetailRequest detailRequest) {
+    public Boolean editDetail(Long id, DetailRequest detailRequest) {
         Detail detailActu = null;
         Optional<Detail> detailBD = detailRepository.findById(id);
         if (detailBD.isPresent()) {
@@ -69,16 +69,16 @@ public class DetailServiceImpl implements IDetailService {
             if (detailRequest.getPrice() != null) detailActu.setPrice(detailRequest.getPrice());
             if (detailRequest.getAmount() != null) detailActu.setAmount(detailRequest.getAmount());
             if (detailRequest.getDiscount() != null) detailActu.setDiscount(detailRequest.getDiscount());
-            if (detailActu.getSaleNote() != null) detailActu.setSaleNote(detailActu.getSaleNote());
+            if (detailActu.getSaleNote() != null) detailActu.setSaleNote(detailRequest.getSaleNote());
         }
         if (detailActu != null) {
             detailRepository.save(detailActu);
             log.info("Se actualizo el DETALLE con éxito");
-            return "Se actualizo el DETALLE con éxito";
+            return true;
         }
 
         log.info("El DETALLE no se actualizo correctamente (NULL)");
-        return "El DETALLE no se actualizo correctamente (NULL)";
+        return false;
     }
 
 }
