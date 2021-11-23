@@ -1,6 +1,5 @@
 package com.pinapp.market.marketservice.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,6 +15,7 @@ import java.math.BigDecimal;
 public class Detail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "DETAIL_ID")
     private Long id;
     private Integer item;
     private String sku;
@@ -23,9 +23,5 @@ public class Detail {
     private BigDecimal amount;
     private BigDecimal subtotal;
     private String discount;
-    @ManyToOne( fetch = FetchType.LAZY)
-    @JoinColumn(name = "SALE_NOTE_ID")
-    @JsonBackReference("details")
-    private SaleNote saleNote;
 
 }

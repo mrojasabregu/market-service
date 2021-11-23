@@ -8,7 +8,7 @@ import java.util.List;
 public interface IDetailService {
 
 
-    Detail createDetail(DetailRequest detailRequest);
+    void createDetail(DetailRequest detailRequest, Long saleNoteId);
 
     Detail getDetail(Long id);
 

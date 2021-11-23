@@ -35,9 +35,9 @@ public class SaleNoteController {
     }
 
     @Operation (summary = "Genera un detalle de compra en el pedido")
-    @PostMapping(path = "/detail")
-    public Detail createDetail(@Validated @RequestBody DetailRequest detailrequest) {
-        return detailService.createDetail(detailrequest);
+    @PostMapping(path = "/{saleNoteId}/detail")
+    public void createDetail(@Validated @RequestBody DetailRequest detailrequest,@PathVariable Long saleNoteId) {
+        detailService.createDetail(detailrequest, saleNoteId);
     }
 
     @Operation (summary = "Cambia un valor en el detalle de compra del pedido")

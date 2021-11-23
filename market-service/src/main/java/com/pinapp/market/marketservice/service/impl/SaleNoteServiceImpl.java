@@ -103,7 +103,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if(saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
-            if(saleNoteActu.getDetails().size() != 0){
+            /*****if(saleNoteActu.getDetails().size() != 0){
                 saleNoteActu.setState("ISSUED");
                 for(Detail detail : saleNoteActu.getDetails()){
                     subtotal = subtotal.add(detail.getSubtotal());
@@ -113,7 +113,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
             }else{
                 log.info("El pedido debe contener al menos un detalle para poder emitirse");
                 log.error("El pedido no se pudo emitir");
-            }
+            }*****/
         }
         if(saleNoteActu != null) {
             saleNoteRepository.save(saleNoteActu);

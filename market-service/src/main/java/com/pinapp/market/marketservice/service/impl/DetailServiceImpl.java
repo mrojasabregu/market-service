@@ -43,21 +43,27 @@ public class DetailServiceImpl implements IDetailService {
         throw new NotFoundException("Detail does not exist");
     }
 
-    public Detail createDetail(DetailRequest detailRequest) {
-        if(detailRequest.getSaleNote() == null){
-            throw new BadRequestException("Invalid Sale Note");
-        }
+    @Transactional
+    public void createDetail(DetailRequest detailRequest, Long saleNoteId) {
+        /** if (detailRequest.getSaleNote() == null) {
+         throw new BadRequestException("Invalid Sale Note");
+         }**/  //TODO VALIDAR QUE EXISTA EL NUMERO DE PEDIDO, CON EL REPOSITORY
         Detail detailNew;
         Detail detail = detailMapper.apply(detailRequest);
         detailNew = detail;
         detailNew.setId(null);
-        Optional<SaleNote> sale = saleNoteRepository.findById(detailRequest.getSaleNote().getId());
-        detailNew.setSaleNote(sale.get());
+        Optional<SaleNote> sale = saleNoteRepository.findById(saleNoteId);
+        if (sale.isPresent()) {
+            SaleNote s = sale.get();
+            s.getDetails().add(detailNew);
+           saleNoteRepository.save(s);
+        } else {
+            //TODO lanzar excepcion avisando que no existe el pedido
+            //tmb log.error tmb???
+        }
 
-        detailRepository.save(detailNew);
         log.info("Se cargo el DETALLE  con éxito");
 
-        return detailNew;
     }
 
     public Boolean editDetail(Long id, DetailRequest detailRequest) {
@@ -74,7 +80,7 @@ public class DetailServiceImpl implements IDetailService {
             if (detailRequest.getPrice() != null) detailActu.setPrice(detailRequest.getPrice());
             if (detailRequest.getAmount() != null) detailActu.setAmount(detailRequest.getAmount());
             if (detailRequest.getDiscount() != null) detailActu.setDiscount(detailRequest.getDiscount());
-            if (detailActu.getSaleNote() != null) detailActu.setSaleNote(detailRequest.getSaleNote());
+
         }
         if (detailActu != null) {
             detailRepository.save(detailActu);
@@ -88,31 +94,22 @@ public class DetailServiceImpl implements IDetailService {
 
     @Transactional
     @Modifying
-    public String deleteDetail(Long idSaleNote, Long idDetail)
-    {
-        Optional<SaleNote> saleNoteOP = saleNoteRepository.findById(idSaleNote);
-        if (saleNoteOP.isPresent()) {
-            SaleNote sn = saleNoteOP.get();
-            Optional<Detail>  d = sn.getDetails().stream().filter( e -> e.getId().equals(idDetail)).findFirst() ;
-
-            if( d.isPresent())
-            {
-               // List<Detail> dl = sn.getDetails();
-               // dl.remove()
-                Detail dd= d.get();
-                detailRepository.delete(dd);
-
-                log.info("Se elimino el detalle con exito");
-                return null;
-            }else
-            {
-                log.error("no se encontro el detalle");
-                // TODO: lanzar una excepcion
-                return null;
+    public String deleteDetail(Long idSaleNote, Long idDetail) {
+        Optional<Detail> d = detailRepository.findById(idDetail);
+        if (d.isPresent()) {
+            Detail dd = d.get();
+            Optional<SaleNote> sale = saleNoteRepository.findById(idSaleNote);
+            if (sale.isPresent()) {
+                sale.get().getDetails().remove(dd);
+            } else {
+                //TODO lanzar excepcion avisando que no existe el pedido
+                //tmb log.error tmb???
             }
-
+            detailRepository.delete(dd);
+            log.info("Se elimino el detalle con exito");
+            return null;
         } else {
-            log.error("no se encontro el pedido");
+            log.error("no se encontro el detalle para ser eliminado");
             // TODO: lanzar una excepcion
             return null;
         }

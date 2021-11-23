@@ -19,6 +19,5 @@ public class DetailRequest {
     private BigDecimal amount;
     private String discount;
     private BigDecimal subtotal;
-    private SaleNote saleNote;
 
 }

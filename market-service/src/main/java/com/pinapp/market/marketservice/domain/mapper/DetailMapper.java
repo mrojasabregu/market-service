@@ -14,14 +14,12 @@ public class DetailMapper implements Function<DetailRequest, Detail> {
     @Override
     public Detail apply(DetailRequest detailRequest) {
         return Detail.builder()
-                .id(detailRequest.getId())
                 .item(detailRequest.getItem())
                 .sku(detailRequest.getSku())
                 .price(detailRequest.getPrice())
                 .amount(detailRequest.getAmount())
                 .subtotal(detailRequest.getPrice().multiply(detailRequest.getAmount()))
                 .discount(detailRequest.getDiscount())
-                .saleNote(detailRequest.getSaleNote())
                 .build();
     }
 }
