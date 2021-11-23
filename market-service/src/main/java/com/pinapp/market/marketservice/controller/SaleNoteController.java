@@ -9,6 +9,11 @@ import com.pinapp.market.marketservice.domain.model.Detail;
 import com.pinapp.market.marketservice.service.IDetailService;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springdoc.core.annotations.RouterOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +33,15 @@ public class SaleNoteController {
     private ISaleNoteService saleNoteService;
 
 
-    @Operation (summary = "Devuelve el detalle de compra de un item del pedido")
+    @Operation(summary = "Devuelve el detalle de compra de un item del pedido")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Detail.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Detail not found",
+                    content = @Content) })
     @GetMapping(path = "/detail/{id}")
     public Detail retrieveDetail(@PathVariable("id") Long id) {
         return detailService.getDetail(id);
