@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteMapper;
@@ -31,17 +32,22 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
 
 
     public SaleNote getSaleNote(Long id){
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID supplied");
+        }
         Optional<SaleNote> saleNote =  saleNoteRepository.findById(id);
         if(saleNote.isPresent()){
             log.info("Se mostro con éxito el PEDIDO");
             return saleNote.get();
         }
         log.info("No se encontro el PEDIDO");
-        throw new NotFoundException("Sale Note does not exist");
+        throw new NotFoundException("Invalid ID");
     }
 
     public SaleNote createSaleNote(SaleNoteRequest saleNoteRequest){
-
+        if(saleNoteRequest.getDate()  == null || saleNoteRequest.getDocumentNumber() == null || saleNoteRequest.getDocumentType() == null || saleNoteRequest.getIdAddress() == null ||  saleNoteRequest.getOrderNumber() == null){
+            throw new BadRequestException("Invalid input");
+        }
         SaleNote saleNoteNew;
         SaleNote saleNote = saleNoteMapper.apply(saleNoteRequest);
         saleNoteNew = saleNote;
@@ -52,6 +58,9 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
     }
 
     public Boolean editSaleNote(Long id, SaleNoteRequest saleNoteRequest){
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if(saleNoteBD.isPresent()){
@@ -69,7 +78,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         }
 
         log.info("El objeto no se actualizo correctamente (NULL)");
-        return false;
+        throw new NotFoundException("SaleNote does not exist");
     }
 
     public List<SaleNote> getsSaleNotesInProcess(){
@@ -81,6 +90,9 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
     }
 
     public Boolean saleNoteCancelled(Long id){
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID supplied");
+        }
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if(saleNoteBD.isPresent()) {
@@ -94,10 +106,13 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         }
 
         log.info("El objeto no se actualizo correctamente (NULL)");
-        return null;
+        throw new NotFoundException("SaleNote does not exist");
     }
 
     public void saleNoteIssued(Long id){
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         BigDecimal subtotal = BigDecimal.ZERO;
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
@@ -113,6 +128,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
             }else{
                 log.info("El pedido debe contener al menos un detalle para poder emitirse");
                 log.error("El pedido no se pudo emitir");
+                throw new BadRequestException("The list must contain at least 1 detail.");
             }
         }
         if(saleNoteActu != null) {
@@ -120,6 +136,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
             log.info("Se emitió el pedido con éxito");
         }else{
             log.error("El pedido no se pudo emitir");
+            throw new NotFoundException("SaleNote does not exist");
         }
     }
 }
