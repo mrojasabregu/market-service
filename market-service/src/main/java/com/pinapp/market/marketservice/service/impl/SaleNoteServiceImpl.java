@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteMapper;
 import com.pinapp.market.marketservice.domain.model.Detail;
@@ -32,9 +33,11 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
     public SaleNote getSaleNote(Long id){
         Optional<SaleNote> saleNote =  saleNoteRepository.findById(id);
         if(saleNote.isPresent()){
+            log.info("Se mostro con éxito el PEDIDO");
             return saleNote.get();
         }
-        return null;
+        log.info("No se encontro el PEDIDO");
+        throw new NotFoundException("Sale Note does not exist");
     }
 
     public SaleNote createSaleNote(SaleNoteRequest saleNoteRequest){

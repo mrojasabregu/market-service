@@ -1,5 +1,7 @@
 package com.pinapp.market.marketservice.service.impl;
 
+import com.pinapp.market.marketservice.config.exception.BadRequestException;
+import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
 import com.pinapp.market.marketservice.domain.mapper.DetailMapper;
 import com.pinapp.market.marketservice.domain.model.Detail;
@@ -35,20 +37,20 @@ public class DetailServiceImpl implements IDetailService {
             return detail.get();
         }
         log.info("NO se pudo mostrar el DETALLE");
-
-        return null;
+        throw new NotFoundException("Detail does not exist");
     }
 
     public Detail createDetail(DetailRequest detailRequest) {
-
+        if(detailRequest.getSaleNote() == null){
+            throw new BadRequestException("Invalid Sale Note");
+        }
         Detail detailNew;
         Detail detail = detailMapper.apply(detailRequest);
         detailNew = detail;
         detailNew.setId(null);
-        if(detailRequest.getSaleNote() != null){
-            Optional<SaleNote> sale = saleNoteRepository.findById(detailRequest.getSaleNote().getId());
-            detailNew.setSaleNote(sale.get());
-        }
+        Optional<SaleNote> sale = saleNoteRepository.findById(detailRequest.getSaleNote().getId());
+        detailNew.setSaleNote(sale.get());
+
         detailRepository.save(detailNew);
         log.info("Se cargo el DETALLE  con éxito");
 
