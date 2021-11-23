@@ -12,6 +12,6 @@ public interface IDetailService {
 
     Detail getDetail(Long id);
 
-    String editDetail(Long id, DetailRequest detailRequest);
+    Boolean editDetail(Long id, DetailRequest detailRequest);
 
 }
