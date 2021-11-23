@@ -14,7 +14,6 @@ public class SaleNoteMapper implements Function<SaleNoteRequest, SaleNote> {
                 .id(saleNoteRequest.getId())
                 .orderNumber(saleNoteRequest.getOrderNumber())
                 .date(saleNoteRequest.getDate())
-                .state(saleNoteRequest.getState())
                 .documentNumber(saleNoteRequest.getDocumentNumber())
                 .documentType(saleNoteRequest.getDocumentType())
                 .idAddress(saleNoteRequest.getIdAddress())

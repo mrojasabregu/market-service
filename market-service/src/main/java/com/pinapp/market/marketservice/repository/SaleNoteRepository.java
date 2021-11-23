@@ -13,10 +13,10 @@ import java.util.Optional;
 @Repository
 public interface SaleNoteRepository extends CrudRepository<SaleNote, Long>{
 
-    @Query(value = "SELECT * FROM sale_note WHERE state = 'In process' OR state = 'Issued'", nativeQuery = true)
+    @Query(value = "SELECT * FROM sale_note WHERE state = 'INPROCESS' OR state = 'ISSUED'", nativeQuery = true)
     List<SaleNote> getState();
 
-    @Query(value = "SELECT * FROM sale_note WHERE state = 'Canceled'", nativeQuery = true)
+    @Query(value = "SELECT * FROM sale_note WHERE state = 'CANCELLED'", nativeQuery = true)
     List<SaleNote> getStateCanceled();
 
 }

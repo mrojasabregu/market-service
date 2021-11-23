@@ -11,13 +11,13 @@ public interface ISaleNoteService {
 
     SaleNote getSaleNote(Long id);
 
-    String editSaleNote(Long id, SaleNoteRequest saleNoteRequest);
+    Boolean editSaleNote(Long id, SaleNoteRequest saleNoteRequest);
 
     List<SaleNote> getsSaleNotesInProcess();
 
     List<SaleNote> getSaleNoteCanceled();
 
-    String saleNoteCancelled(Long id, SaleNoteRequest saleNoteRequest);
+    Boolean saleNoteCancelled(Long id);
 
-    void saleNoteIssued(Long id, SaleNoteRequest saleNoteRequest);
+    void saleNoteIssued(Long id);
 }

@@ -15,7 +15,6 @@ public class SaleNoteRequest {
     private Long id;
     private Long orderNumber;
     private Date date;
-    private String state;
     private String documentNumber;
     private String documentType;
     private Long idAddress;
