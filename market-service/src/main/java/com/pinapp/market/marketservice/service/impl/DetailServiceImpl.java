@@ -31,6 +31,9 @@ public class DetailServiceImpl implements IDetailService {
 
 
     public Detail getDetail(Long id) {
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Optional<Detail> detail = detailRepository.findById(id);
         if (detail.isPresent()) {
             log.info("Se mostro con éxito el DETALLE");
@@ -41,9 +44,6 @@ public class DetailServiceImpl implements IDetailService {
     }
 
     public Detail createDetail(DetailRequest detailRequest) {
-        if(detailRequest.getSaleNote() == null){
-            throw new BadRequestException("Invalid Sale Note");
-        }
         Detail detailNew;
         Detail detail = detailMapper.apply(detailRequest);
         detailNew = detail;
@@ -58,6 +58,9 @@ public class DetailServiceImpl implements IDetailService {
     }
 
     public Boolean editDetail(Long id, DetailRequest detailRequest) {
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Detail detailActu = null;
         Optional<Detail> detailBD = detailRepository.findById(id);
         if (detailBD.isPresent()) {
