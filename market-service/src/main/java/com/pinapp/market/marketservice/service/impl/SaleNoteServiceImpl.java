@@ -1,16 +1,20 @@
 package com.pinapp.market.marketservice.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.pinapp.market.marketservice.client.CustomerClient;
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
-import com.pinapp.market.marketservice.domain.mapper.SaleNoteMapper;
-import com.pinapp.market.marketservice.domain.model.Detail;
-import com.pinapp.market.marketservice.domain.model.SaleNote;
+import com.pinapp.market.marketservice.controller.response.CustomerResponse;
+import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
+import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
+import com.pinapp.market.marketservice.domain.entity.Detail;
+import com.pinapp.market.marketservice.domain.entity.SaleNote;
+import com.pinapp.market.marketservice.domain.mapper.SaleNoteResponseMapper;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,20 +27,36 @@ import org.springframework.stereotype.Service;
 public class SaleNoteServiceImpl implements ISaleNoteService {
 
     @Autowired
-    private SaleNoteMapper saleNoteMapper;
+    private SaleNoteRequestMapper saleNoteMapper;
 
     @Autowired
     private SaleNoteRepository saleNoteRepository;
 
+    @Autowired
+    private SaleNoteResponseMapper saleNoteResponseMapper;
 
-    public SaleNote getSaleNote(Long id) {
+    @Autowired
+    private CustomerClient customerClient;
+
+
+    public SaleNoteResponse getSaleNote(Long id) {
         if (id.getClass() != Long.class) {
             throw new NumberFormatException("Invalid ID supplied");
         }
-        Optional<SaleNote> saleNote = saleNoteRepository.findById(id);
-        if (saleNote.isPresent()) {
+        Optional<SaleNote> saleNote =  saleNoteRepository.findById(id);
+        if(saleNote.isPresent()) {
+            SaleNoteResponse saleNoteResponse = saleNoteResponseMapper.apply(saleNote.get());
+            HashMap hashMap = new HashMap<String, String>();
+            hashMap.put("doc_type", saleNote.get().getDocumentType());
+            hashMap.put("doc_numb", saleNote.get().getDocumentNumber());
+            try {
+                CustomerResponse customer = customerClient.getCustomerByDocument(hashMap);
+                saleNoteResponse.setClient(customer);
+            } catch (Exception e) {
+                throw new BadRequestException("Error al buscar customer");
+            }
             log.info("Se mostro con éxito el PEDIDO");
-            return saleNote.get();
+            return saleNoteResponse;
         }
         log.info("No se encontro el PEDIDO");
         throw new NotFoundException("Invalid ID");

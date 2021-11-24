@@ -3,9 +3,9 @@ package com.pinapp.market.marketservice.service.impl;
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
-import com.pinapp.market.marketservice.domain.mapper.DetailMapper;
-import com.pinapp.market.marketservice.domain.model.Detail;
-import com.pinapp.market.marketservice.domain.model.SaleNote;
+import com.pinapp.market.marketservice.domain.mapper.DetailRequestMapper;
+import com.pinapp.market.marketservice.domain.entity.Detail;
+import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import com.pinapp.market.marketservice.repository.DetailRepository;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.IDetailService;
@@ -24,7 +24,7 @@ public class DetailServiceImpl implements IDetailService {
 
 
     @Autowired
-    private DetailMapper detailMapper;
+    private DetailRequestMapper detailMapper;
 
     @Autowired
     private DetailRepository detailRepository;
@@ -34,6 +34,9 @@ public class DetailServiceImpl implements IDetailService {
 
 
     public Detail getDetail(Long id) {
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Optional<Detail> detail = detailRepository.findById(id);
         if (detail.isPresent()) {
             log.info("Se mostro con éxito el DETALLE");
@@ -62,6 +65,9 @@ public class DetailServiceImpl implements IDetailService {
     }
 
     public Boolean editDetail(Long id, DetailRequest detailRequest) {
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Detail detailActu = null;
         Optional<Detail> detailBD = detailRepository.findById(id);
         if (detailBD.isPresent()) {
