@@ -39,15 +39,12 @@ public class DetailServiceImpl implements IDetailService {
             log.info("Se mostro con éxito el DETALLE");
             return detail.get();
         }
-        log.info("NO se pudo mostrar el DETALLE");
+        log.error("NO se pudo mostrar el DETALLE");
         throw new NotFoundException("Detail does not exist");
     }
 
     @Transactional
     public void createDetail(DetailRequest detailRequest, Long saleNoteId) {
-        /** if (detailRequest.getSaleNote() == null) {
-         throw new BadRequestException("Invalid Sale Note");
-         }**/  //TODO VALIDAR QUE EXISTA EL NUMERO DE PEDIDO, CON EL REPOSITORY
         Detail detailNew;
         Detail detail = detailMapper.apply(detailRequest);
         detailNew = detail;
@@ -56,14 +53,12 @@ public class DetailServiceImpl implements IDetailService {
         if (sale.isPresent()) {
             SaleNote s = sale.get();
             s.getDetails().add(detailNew);
-           saleNoteRepository.save(s);
+            saleNoteRepository.save(s);
+            log.info("Se cargo el DETALLE  con éxito");
         } else {
-            //TODO lanzar excepcion avisando que no existe el pedido
-            //tmb log.error tmb???
+            log.error("NO se pudo mostrar el DETALLE");
+            throw new BadRequestException("Invalid Sale Note");
         }
-
-        log.info("Se cargo el DETALLE  con éxito");
-
     }
 
     public Boolean editDetail(Long id, DetailRequest detailRequest) {
@@ -87,8 +82,8 @@ public class DetailServiceImpl implements IDetailService {
             log.info("Se actualizo el DETALLE con éxito");
             return true;
         }
-
-        log.info("El DETALLE no se actualizo correctamente (NULL)");
+        //TODO excepcion
+        log.error("El DETALLE no se actualizo correctamente (NULL)");
         return false;
     }
 
@@ -103,16 +98,15 @@ public class DetailServiceImpl implements IDetailService {
                 sale.get().getDetails().remove(dd);
             } else {
                 //TODO lanzar excepcion avisando que no existe el pedido
-                //tmb log.error tmb???
+                log.error("El PEDIDO no existe");
             }
             detailRepository.delete(dd);
             log.info("Se elimino el detalle con exito");
-            return null;
         } else {
             log.error("no se encontro el detalle para ser eliminado");
             // TODO: lanzar una excepcion
-            return null;
         }
+        return null;
     }
 
 

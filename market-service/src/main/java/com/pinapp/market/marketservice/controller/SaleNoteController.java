@@ -29,9 +29,9 @@ public class SaleNoteController {
 
 
     @Operation (summary = "Devuelve el detalle de compra de un item del pedido")
-    @GetMapping(path = "/detail/{id}")
-    public Detail retrieveDetail(@PathVariable("id") Long id) {
-        return detailService.getDetail(id);
+    @GetMapping(path = "/detail/{idDetail}")
+    public Detail retrieveDetail(@PathVariable("idDetail") Long idDetail) {
+        return detailService.getDetail(idDetail);
     }
 
     @Operation (summary = "Genera un detalle de compra en el pedido")
@@ -41,9 +41,9 @@ public class SaleNoteController {
     }
 
     @Operation (summary = "Cambia un valor en el detalle de compra del pedido")
-    @PutMapping(path = "/detail/{id}")
-    public Boolean editDetail(@PathVariable("id") Long id, @RequestBody DetailRequest detailRequest) {
-        return detailService.editDetail(id, detailRequest);
+    @PutMapping(path = "/detail/{idDetail}")
+    public Boolean editDetail(@PathVariable("idDetail") Long idDetail, @RequestBody DetailRequest detailRequest) {
+        return detailService.editDetail(idDetail, detailRequest);
     }
 
 
