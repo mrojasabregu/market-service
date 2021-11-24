@@ -1,9 +1,6 @@
 package com.pinapp.market.marketservice.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 import javax.persistence.*;
@@ -15,7 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "SALE_NOTE")
 public class SaleNote {
@@ -29,7 +27,7 @@ public class SaleNote {
     private String documentNumber;
     private String documentType;
     private Long idAddress;
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "SALE_NOTE_ID")
     private List<Detail> details;
     private BigDecimal total;

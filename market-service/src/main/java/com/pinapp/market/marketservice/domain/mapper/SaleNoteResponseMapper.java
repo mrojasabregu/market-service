@@ -20,6 +20,7 @@ public class SaleNoteResponseMapper implements Function<SaleNote, SaleNoteRespon
                 .id(saleNote.getId())
                 .orderNumber(saleNote.getOrderNumber())
                 .date(saleNote.getDate())
+                .state(saleNote.getState())
                 .documentNumber(saleNote.getDocumentNumber())
                 .documentType(saleNote.getDocumentType())
                 .idAddress(saleNote.getIdAddress())

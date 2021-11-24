@@ -21,5 +21,4 @@ public class DetailResponse {
     private BigDecimal amount;
     private BigDecimal subtotal;
     private String discount;
-    private SaleNote saleNote;
 }

@@ -20,7 +20,6 @@ public class DetailResponseMapper implements Function<Detail, DetailResponse> {
                 .amount(detail.getAmount())
                 .subtotal(detail.getSubtotal())
                 .discount(detail.getDiscount())
-                .saleNote(detail.getSaleNote())
                 .build();
     }
 }

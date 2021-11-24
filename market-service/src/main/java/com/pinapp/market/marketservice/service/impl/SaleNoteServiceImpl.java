@@ -30,16 +30,16 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
     @Autowired
     private SaleNoteResponseMapper saleNoteResponseMapper;
 
+
     @Autowired
     private SaleNoteRepository saleNoteRepository;
 
-
-    public SaleNoteResponse getSaleNote(Long id){
-        if(id.getClass() != Long.class){
+    public SaleNoteResponse getSaleNote(Long id) {
+        if (id.getClass() != Long.class) {
             throw new NumberFormatException("Invalid ID supplied");
         }
-        Optional<SaleNote> saleNote =  saleNoteRepository.findById(id);
-        if(saleNote.isPresent()){
+        Optional<SaleNote> saleNote = saleNoteRepository.findById(id);
+        if (saleNote.isPresent()) {
             log.info("Se mostro con éxito el PEDIDO");
             SaleNoteResponse saleNoteR = saleNoteResponseMapper.apply(saleNote.get());
             return saleNoteR;
@@ -48,8 +48,8 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         throw new NotFoundException("Invalid ID");
     }
 
-    public SaleNoteResponse createSaleNote(SaleNoteRequest saleNoteRequest){
-        if(saleNoteRequest.getDate()  == null || saleNoteRequest.getDocumentNumber() == null || saleNoteRequest.getDocumentType() == null || saleNoteRequest.getIdAddress() == null ||  saleNoteRequest.getOrderNumber() == null){
+    public SaleNoteResponse createSaleNote(SaleNoteRequest saleNoteRequest) {
+        if (saleNoteRequest.getDate() == null || saleNoteRequest.getDocumentNumber() == null || saleNoteRequest.getDocumentType() == null || saleNoteRequest.getIdAddress() == null || saleNoteRequest.getOrderNumber() == null) {
             throw new BadRequestException("Invalid input");
         }
         SaleNote saleNoteNew;
@@ -59,23 +59,34 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         saleNoteRepository.save(saleNoteNew);
         SaleNoteResponse saleNoteR = saleNoteResponseMapper.apply(saleNoteNew);
         return saleNoteR;
+
     }
 
-    public Boolean editSaleNote(Long id, SaleNoteRequest saleNoteRequest){
-        if(id.getClass() != Long.class){
+    public Boolean editSaleNote(Long id, SaleNoteRequest saleNoteRequest) {
+        if (id.getClass() != Long.class) {
             throw new NumberFormatException("Invalid ID");
         }
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
-        if(saleNoteBD.isPresent()){
+        if (saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
-            if(saleNoteRequest.getOrderNumber() != null){saleNoteActu.setOrderNumber(saleNoteRequest.getOrderNumber());}
-            if(saleNoteRequest.getDate() != null){saleNoteActu.setDate(saleNoteRequest.getDate());}
-            if(saleNoteRequest.getDocumentNumber() != null){saleNoteActu.setDocumentNumber(saleNoteRequest.getDocumentNumber());}
-            if(saleNoteRequest.getDocumentType() != null){saleNoteActu.setDocumentType(saleNoteRequest.getDocumentType());}
-            if(saleNoteRequest.getIdAddress() != null){saleNoteActu.setIdAddress(saleNoteRequest.getIdAddress());}
+            if (saleNoteRequest.getOrderNumber() != null) {
+                saleNoteActu.setOrderNumber(saleNoteRequest.getOrderNumber());
+            }
+            if (saleNoteRequest.getDate() != null) {
+                saleNoteActu.setDate(saleNoteRequest.getDate());
+            }
+            if (saleNoteRequest.getDocumentNumber() != null) {
+                saleNoteActu.setDocumentNumber(saleNoteRequest.getDocumentNumber());
+            }
+            if (saleNoteRequest.getDocumentType() != null) {
+                saleNoteActu.setDocumentType(saleNoteRequest.getDocumentType());
+            }
+            if (saleNoteRequest.getIdAddress() != null) {
+                saleNoteActu.setIdAddress(saleNoteRequest.getIdAddress());
+            }
         }
-        if(saleNoteActu != null) {
+        if (saleNoteActu != null) {
             saleNoteRepository.save(saleNoteActu);
             log.info("Se actualizo con éxito");
             return true;
@@ -85,28 +96,28 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         throw new NotFoundException("SaleNote does not exist");
     }
 
-    public List<SaleNoteResponse> getsSaleNotesInProcess(){
+    public List<SaleNoteResponse> getsSaleNotesInProcess() {
         List<SaleNote> saleNotesCancelled = saleNoteRepository.getState();
         return saleNotesCancelled.stream().map(saleNoteResponseMapper).collect(Collectors.toList());
     }
 
-    public List<SaleNoteResponse> getSaleNoteCanceled(){
+    public List<SaleNoteResponse> getSaleNoteCanceled() {
 
-       List<SaleNote> saleNotesCancelled = saleNoteRepository.getStateCanceled();
-       return saleNotesCancelled.stream().map(saleNoteResponseMapper).collect(Collectors.toList());
+        List<SaleNote> saleNotesCancelled = saleNoteRepository.getStateCanceled();
+        return saleNotesCancelled.stream().map(saleNoteResponseMapper).collect(Collectors.toList());
     }
 
-    public Boolean saleNoteCancelled(Long id){
-        if(id.getClass() != Long.class){
+    public Boolean saleNoteCancelled(Long id) {
+        if (id.getClass() != Long.class) {
             throw new NumberFormatException("Invalid ID supplied");
         }
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
-        if(saleNoteBD.isPresent()) {
+        if (saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
             saleNoteActu.setState("CANCELLED");
         }
-        if(saleNoteActu != null) {
+        if (saleNoteActu != null) {
             saleNoteRepository.save(saleNoteActu);
             log.info("Se actualizo con éxito");
             return true;
@@ -116,34 +127,33 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         throw new NotFoundException("SaleNote does not exist");
     }
 
-    public void saleNoteIssued(Long id){
-        if(id.getClass() != Long.class){
+    public void saleNoteIssued(Long id) {
+        if (id.getClass() != Long.class) {
             throw new NumberFormatException("Invalid ID");
         }
         BigDecimal subtotal = BigDecimal.ZERO;
         SaleNote saleNoteActu = null;
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
-        if(saleNoteBD.isPresent()) {
+        if (saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
-            if(saleNoteActu.getDetails().size() != 0){
+            if (saleNoteActu.getDetails().size() != 0) {
                 saleNoteActu.setState("ISSUED");
-                for(Detail detail : saleNoteActu.getDetails()){
+                for (Detail detail : saleNoteActu.getDetails()) {
                     subtotal = subtotal.add(detail.getSubtotal());
                 }
                 saleNoteActu.setTotal(subtotal);
 
-            }else{
-                log.info("El pedido debe contener al menos un detalle para poder emitirse");
-                log.error("El pedido no se pudo emitir");
+            } else {
+                log.error("El pedido debe contener al menos un detalle para poder emitirse");
                 throw new BadRequestException("The list must contain at least 1 detail.");
             }
-        }
-        if(saleNoteActu != null) {
-            saleNoteRepository.save(saleNoteActu);
-            log.info("Se emitió el pedido con éxito");
-        }else{
-            log.error("El pedido no se pudo emitir");
-            throw new NotFoundException("SaleNote does not exist");
+            if (saleNoteActu != null) {
+                saleNoteRepository.save(saleNoteActu);
+                log.info("Se emitió el pedido con éxito");
+            } else {
+                log.error("El pedido no se pudo emitir");
+                throw new NotFoundException("SaleNote does not exist");
+            }
         }
     }
 }

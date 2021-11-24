@@ -44,21 +44,28 @@ public class SaleNoteController {
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Detail not found",
                     content = @Content) })
-    @GetMapping(path = "/detail/{id}")
-    public DetailResponse retrieveDetail(@PathVariable("id") Long id) {
-        return detailService.getDetail(id);
+    @GetMapping(path = "/detail/{idDetail}")
+    public DetailResponse retrieveDetail(@PathVariable("idDetail") Long idDetail) {
+        return detailService.getDetail(idDetail);
     }
 
     @Operation (summary = "Genera un detalle de compra en el pedido")
-    @PostMapping(path = "/detail")
-    public Detail createDetail(@Validated @RequestBody DetailRequest detailrequest) {
-        return detailService.createDetail(detailrequest);
+    @PostMapping(path = "/{saleNoteId}/detail")
+    public SaleNoteResponse createDetail(@Validated @RequestBody DetailRequest detailrequest,@PathVariable Long saleNoteId) {
+        return detailService.createDetail(detailrequest, saleNoteId);
     }
 
     @Operation (summary = "Cambia un valor en el detalle de compra del pedido")
-    @PutMapping(path = "/detail/{id}")
-    public Boolean editDetail(@PathVariable("id") Long id, @RequestBody DetailRequest detailRequest) {
-        return detailService.editDetail(id, detailRequest);
+    @PutMapping(path = "/detail/{idDetail}")
+    public Boolean editDetail(@PathVariable("idDetail") Long idDetail, @RequestBody DetailRequest detailRequest) {
+        return detailService.editDetail(idDetail, detailRequest);
+    }
+
+    //DELETE /pedido/{idPedido}/detalle/{idDetalle}
+    @Operation( summary = "Elimina un detalle de un pedido determinado")
+    @DeleteMapping(path = "/{idSaleNote}/detail/{idDetail}")
+    public String deleteDetail(@PathVariable Long idSaleNote, @PathVariable Long idDetail) {
+        return this.detailService.deleteDetail(idSaleNote, idDetail);
     }
 
     @PostMapping(path = "/")
@@ -81,19 +88,14 @@ public class SaleNoteController {
         return saleNoteService.getsSaleNotesInProcess();
     }
 
-    @GetMapping(path = "/cancelled")
-    public List<SaleNoteResponse> getSaleNotesAnulados() {
-        return saleNoteService.getSaleNoteCanceled();
-    }
-
-    @GetMapping(path = "/{id}/cancel")
+    @GetMapping(path = "/{idSaleNote}/cancel")
     public Boolean saleNoteCancelled(@PathVariable("id") Long id) {
         return saleNoteService.saleNoteCancelled(id);
     }
 
-    @GetMapping(path = "/{id}/issue")
-    public void saleNoteIssued(@PathVariable("id") Long id) {
-        saleNoteService.saleNoteIssued(id);
+    @GetMapping(path = "/{idSaleNote}/issue")
+    public void saleNoteIssued(@PathVariable("idSaleNote") Long idSaleNote) {
+        saleNoteService.saleNoteIssued(idSaleNote);
     }
 
 
