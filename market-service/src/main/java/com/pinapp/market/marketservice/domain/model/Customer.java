@@ -5,20 +5,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class Customer {
-
+    private String id;
     private String name;
     private String lastName;
-    private String documentType;
-    private Long documentNumber;
+    private String type;
+    private String documentNumber;
     private String email;
-    private Long phone;
-    private Address address;
+    private String phone;
 
 
 }

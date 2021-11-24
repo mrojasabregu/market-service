@@ -3,7 +3,10 @@ package com.pinapp.market.marketservice.service.impl;
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
+import com.pinapp.market.marketservice.controller.response.DetailResponse;
+import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
 import com.pinapp.market.marketservice.domain.mapper.DetailRequestMapper;
+import com.pinapp.market.marketservice.domain.mapper.DetailResponseMapper;
 import com.pinapp.market.marketservice.domain.model.Detail;
 import com.pinapp.market.marketservice.domain.model.SaleNote;
 import com.pinapp.market.marketservice.repository.DetailRepository;
@@ -24,17 +27,21 @@ public class DetailServiceImpl implements IDetailService {
     private DetailRequestMapper detailMapper;
 
     @Autowired
+    private DetailResponseMapper detailResponseMapper;
+
+    @Autowired
     private DetailRepository detailRepository;
 
     @Autowired
     private SaleNoteRepository saleNoteRepository;
 
 
-    public Detail getDetail(Long id) {
+    public DetailResponse getDetail(Long id) {
         Optional<Detail> detail = detailRepository.findById(id);
         if (detail.isPresent()) {
             log.info("Se mostro con éxito el DETALLE");
-            return detail.get();
+            DetailResponse detailR = detailResponseMapper.apply(detail.get());
+            return detailR;
         }
         log.info("NO se pudo mostrar el DETALLE");
         throw new NotFoundException("Detail does not exist");
@@ -50,10 +57,10 @@ public class DetailServiceImpl implements IDetailService {
         detailNew.setId(null);
         Optional<SaleNote> sale = saleNoteRepository.findById(detailRequest.getSaleNote().getId());
         detailNew.setSaleNote(sale.get());
-
         detailRepository.save(detailNew);
         log.info("Se cargo el DETALLE  con éxito");
-
+        //DetailResponse detailR = detailResponseMapper.apply(detailNew);
+        //detailR.setSubtotal(detailR.getAmount().multiply(detailR.getPrice()));
         return detailNew;
     }
 

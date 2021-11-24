@@ -4,6 +4,8 @@ package com.pinapp.market.marketservice.controller;
 import com.pinapp.market.marketservice.config.exception.NumberFormatException;
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
+import com.pinapp.market.marketservice.controller.response.DetailResponse;
+import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
 import com.pinapp.market.marketservice.domain.model.SaleNote;
 import com.pinapp.market.marketservice.domain.model.Detail;
 import com.pinapp.market.marketservice.service.IDetailService;
@@ -43,7 +45,7 @@ public class SaleNoteController {
             @ApiResponse(responseCode = "404", description = "Detail not found",
                     content = @Content) })
     @GetMapping(path = "/detail/{id}")
-    public Detail retrieveDetail(@PathVariable("id") Long id) {
+    public DetailResponse retrieveDetail(@PathVariable("id") Long id) {
         return detailService.getDetail(id);
     }
 
@@ -59,14 +61,13 @@ public class SaleNoteController {
         return detailService.editDetail(id, detailRequest);
     }
 
-
     @PostMapping(path = "/")
-    public SaleNote crearSaleNote(@RequestBody SaleNoteRequest saleNoteRequest) {
+    public SaleNoteResponse crearSaleNote(@RequestBody SaleNoteRequest saleNoteRequest) {
         return saleNoteService.createSaleNote(saleNoteRequest);
     }
 
     @GetMapping(path = "/{id}")
-    public SaleNote retriveSaleNote(@PathVariable("id") Long id) {
+    public SaleNoteResponse retriveSaleNote(@PathVariable("id") Long id) {
         return saleNoteService.getSaleNote(id);
     }
 
@@ -76,12 +77,12 @@ public class SaleNoteController {
     }
 
     @GetMapping
-    public List<SaleNote> getSaleNotes() {
+    public List<SaleNoteResponse> getSaleNotes() {
         return saleNoteService.getsSaleNotesInProcess();
     }
 
     @GetMapping(path = "/cancelled")
-    public List<SaleNote> getSaleNotesAnulados() {
+    public List<SaleNoteResponse> getSaleNotesAnulados() {
         return saleNoteService.getSaleNoteCanceled();
     }
 

@@ -3,11 +3,14 @@ package com.pinapp.market.marketservice.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
+import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
+import com.pinapp.market.marketservice.domain.mapper.SaleNoteResponseMapper;
 import com.pinapp.market.marketservice.domain.model.Detail;
 import com.pinapp.market.marketservice.domain.model.SaleNote;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
@@ -25,25 +28,27 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
     private SaleNoteRequestMapper saleNoteMapper;
 
     @Autowired
+    private SaleNoteResponseMapper saleNoteResponseMapper;
+
+    @Autowired
     private SaleNoteRepository saleNoteRepository;
 
 
-
-
-    public SaleNote getSaleNote(Long id){
+    public SaleNoteResponse getSaleNote(Long id){
         if(id.getClass() != Long.class){
             throw new NumberFormatException("Invalid ID supplied");
         }
         Optional<SaleNote> saleNote =  saleNoteRepository.findById(id);
         if(saleNote.isPresent()){
             log.info("Se mostro con éxito el PEDIDO");
-            return saleNote.get();
+            SaleNoteResponse saleNoteR = saleNoteResponseMapper.apply(saleNote.get());
+            return saleNoteR;
         }
         log.info("No se encontro el PEDIDO");
         throw new NotFoundException("Invalid ID");
     }
 
-    public SaleNote createSaleNote(SaleNoteRequest saleNoteRequest){
+    public SaleNoteResponse createSaleNote(SaleNoteRequest saleNoteRequest){
         if(saleNoteRequest.getDate()  == null || saleNoteRequest.getDocumentNumber() == null || saleNoteRequest.getDocumentType() == null || saleNoteRequest.getIdAddress() == null ||  saleNoteRequest.getOrderNumber() == null){
             throw new BadRequestException("Invalid input");
         }
@@ -52,8 +57,8 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         saleNoteNew = saleNote;
         saleNoteNew.setState("INPROCESS");
         saleNoteRepository.save(saleNoteNew);
-
-        return  saleNoteNew;
+        SaleNoteResponse saleNoteR = saleNoteResponseMapper.apply(saleNoteNew);
+        return saleNoteR;
     }
 
     public Boolean editSaleNote(Long id, SaleNoteRequest saleNoteRequest){
@@ -80,12 +85,15 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         throw new NotFoundException("SaleNote does not exist");
     }
 
-    public List<SaleNote> getsSaleNotesInProcess(){
-        return saleNoteRepository.getState();
+    public List<SaleNoteResponse> getsSaleNotesInProcess(){
+        List<SaleNote> saleNotesCancelled = saleNoteRepository.getState();
+        return saleNotesCancelled.stream().map(saleNoteResponseMapper).collect(Collectors.toList());
     }
 
-    public List<SaleNote> getSaleNoteCanceled(){
-        return saleNoteRepository.getStateCanceled();
+    public List<SaleNoteResponse> getSaleNoteCanceled(){
+
+       List<SaleNote> saleNotesCancelled = saleNoteRepository.getStateCanceled();
+       return saleNotesCancelled.stream().map(saleNoteResponseMapper).collect(Collectors.toList());
     }
 
     public Boolean saleNoteCancelled(Long id){
