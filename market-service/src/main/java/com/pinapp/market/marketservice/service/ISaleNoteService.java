@@ -1,7 +1,7 @@
 package com.pinapp.market.marketservice.service;
 
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
-import com.pinapp.market.marketservice.domain.model.SaleNote;
+import com.pinapp.market.marketservice.domain.entity.SaleNote;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.pinapp.market.marketservice.controller.request;
 
-import com.pinapp.market.marketservice.domain.model.Detail;
+import com.pinapp.market.marketservice.domain.entity.Detail;
 import lombok.Builder;
 import lombok.Data;
 
