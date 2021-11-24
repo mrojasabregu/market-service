@@ -3,6 +3,7 @@ package com.pinapp.market.marketservice.controller;
 
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
+import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
 import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import com.pinapp.market.marketservice.domain.entity.Detail;
 import com.pinapp.market.marketservice.service.IDetailService;
@@ -74,7 +75,7 @@ public class SaleNoteController {
     }
 
     @GetMapping(path = "/{id}")
-    public SaleNote retriveSaleNote(@PathVariable("id") Long id) {
+    public SaleNoteResponse retriveSaleNote(@PathVariable("id") Long id) {
         return saleNoteService.getSaleNote(id);
     }
 
