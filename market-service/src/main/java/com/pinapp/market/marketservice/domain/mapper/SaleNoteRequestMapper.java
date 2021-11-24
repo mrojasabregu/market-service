@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component
-public class SaleNoteMapper implements Function<SaleNoteRequest, SaleNote> {
+public class SaleNoteRequestMapper implements Function<SaleNoteRequest, SaleNote> {
 
     public SaleNote apply(SaleNoteRequest saleNoteRequest){
         return SaleNote.builder()

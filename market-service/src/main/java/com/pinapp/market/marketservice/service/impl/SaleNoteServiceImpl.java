@@ -1,14 +1,13 @@
 package com.pinapp.market.marketservice.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
-import com.pinapp.market.marketservice.domain.mapper.SaleNoteMapper;
+import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
 import com.pinapp.market.marketservice.domain.model.Detail;
 import com.pinapp.market.marketservice.domain.model.SaleNote;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class SaleNoteServiceImpl implements ISaleNoteService {
 
     @Autowired
-    private SaleNoteMapper saleNoteMapper;
+    private SaleNoteRequestMapper saleNoteMapper;
 
     @Autowired
     private SaleNoteRepository saleNoteRepository;

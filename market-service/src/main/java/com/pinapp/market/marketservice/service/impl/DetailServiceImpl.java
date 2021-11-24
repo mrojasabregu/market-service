@@ -3,7 +3,7 @@ package com.pinapp.market.marketservice.service.impl;
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
-import com.pinapp.market.marketservice.domain.mapper.DetailMapper;
+import com.pinapp.market.marketservice.domain.mapper.DetailRequestMapper;
 import com.pinapp.market.marketservice.domain.model.Detail;
 import com.pinapp.market.marketservice.domain.model.SaleNote;
 import com.pinapp.market.marketservice.repository.DetailRepository;
@@ -21,7 +21,7 @@ public class DetailServiceImpl implements IDetailService {
 
 
     @Autowired
-    private DetailMapper detailMapper;
+    private DetailRequestMapper detailMapper;
 
     @Autowired
     private DetailRepository detailRepository;
