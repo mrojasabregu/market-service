@@ -1,7 +1,4 @@
 package com.pinapp.market.marketservice.domain.entity;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import com.pinapp.market.marketservice.domain.model.Product;
 import lombok.*;
 
@@ -18,6 +15,7 @@ import java.math.BigDecimal;
 public class Detail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "DETAIL_ID")
     private Long id;
     private Integer item;
     private String sku;
@@ -29,9 +27,5 @@ public class Detail {
     private Product product;
 
     private String discount;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SALE_NOTE_ID")
-    @JsonBackReference("details")
-    private SaleNote saleNote;
 
 }
