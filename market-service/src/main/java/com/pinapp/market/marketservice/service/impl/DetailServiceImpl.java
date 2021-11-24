@@ -93,13 +93,6 @@ public class DetailServiceImpl implements IDetailService {
         Optional<Detail> d = detailRepository.findById(idDetail);
         if (d.isPresent()) {
             Detail dd = d.get();
-            Optional<SaleNote> sale = saleNoteRepository.findById(idSaleNote);
-            if (sale.isPresent()) {
-                sale.get().getDetails().remove(dd);
-            } else {
-                //TODO lanzar excepcion avisando que no existe el pedido
-                log.error("El PEDIDO no existe");
-            }
             detailRepository.delete(dd);
             log.info("Se elimino el detalle con exito");
         } else {
