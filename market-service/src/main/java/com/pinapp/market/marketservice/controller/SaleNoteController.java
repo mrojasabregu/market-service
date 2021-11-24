@@ -29,22 +29,31 @@ public class SaleNoteController {
 
 
     @Operation (summary = "Devuelve el detalle de compra de un item del pedido")
-    @GetMapping(path = "/detail/{id}")
-    public Detail retrieveDetail(@PathVariable("id") Long id) {
-        return detailService.getDetail(id);
+    @GetMapping(path = "/detail/{idDetail}")
+    public Detail retrieveDetail(@PathVariable("idDetail") Long idDetail) {
+        return detailService.getDetail(idDetail);
     }
 
     @Operation (summary = "Genera un detalle de compra en el pedido")
-    @PostMapping(path = "/detail")
-    public Detail createDetail(@Validated @RequestBody DetailRequest detailrequest) {
-        return detailService.createDetail(detailrequest);
+    @PostMapping(path = "/{saleNoteId}/detail")
+    public void createDetail(@Validated @RequestBody DetailRequest detailrequest,@PathVariable Long saleNoteId) {
+        detailService.createDetail(detailrequest, saleNoteId);
     }
 
     @Operation (summary = "Cambia un valor en el detalle de compra del pedido")
-    @PutMapping(path = "/detail/{id}")
-    public Boolean editDetail(@PathVariable("id") Long id, @RequestBody DetailRequest detailRequest) {
-        return detailService.editDetail(id, detailRequest);
+    @PutMapping(path = "/detail/{idDetail}")
+    public Boolean editDetail(@PathVariable("idDetail") Long idDetail, @RequestBody DetailRequest detailRequest) {
+        return detailService.editDetail(idDetail, detailRequest);
     }
+
+
+    //DELETE /pedido/{idPedido}/detalle/{idDetalle}
+    @Operation( summary = "Elimina un detalle de un pedido determinado")
+    @DeleteMapping(path = "/{idSaleNote}/detail/{idDetail}")
+    public String deleteDetail(@PathVariable Long idSaleNote, @PathVariable Long idDetail) {
+        return this.detailService.deleteDetail(idSaleNote, idDetail);
+    }
+
 
 
     @PostMapping(path = "/")
