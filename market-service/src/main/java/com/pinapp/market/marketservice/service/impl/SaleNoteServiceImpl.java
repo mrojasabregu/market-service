@@ -13,6 +13,7 @@ import com.pinapp.market.marketservice.config.exception.CustomException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
 import com.pinapp.market.marketservice.controller.response.*;
+import com.pinapp.market.marketservice.domain.mapper.ProductResponseMapper;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
 import com.pinapp.market.marketservice.domain.entity.Detail;
 import com.pinapp.market.marketservice.domain.entity.SaleNote;
@@ -38,6 +39,9 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
 
     @Autowired
     private SaleNoteResponseMapper saleNoteResponseMapper;
+
+    @Autowired
+    private ProductResponseMapper productResponseMapper;
 
     @Autowired
     private CustomerClient customerClient;
@@ -69,7 +73,9 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
                 for(DetailResponse detail : saleNoteResponse.getDetails()){
                     ResponseEntity<Product> product = productClient.retriveProduct(detail.getSku());
 
-                    //detail.setProduct(product.getBody());
+                    ProductResponse productResponse = productResponseMapper.apply(product.getBody());
+
+                    detail.setProduct(productResponse);
                 }
             } catch (Exception e) {
                 throw new CustomException("Invalid connection: " + e.getMessage());

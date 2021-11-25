@@ -1,4 +1,5 @@
 package com.pinapp.market.marketservice.domain.entity;
+import com.pinapp.market.marketservice.controller.response.ProductResponse;
 import com.pinapp.market.marketservice.domain.model.Product;
 import lombok.*;
 
@@ -24,7 +25,7 @@ public class Detail {
     private BigDecimal subtotal;
 
     @Transient
-    private Product product;
+    private ProductResponse product;
 
     private String discount;
 
