@@ -20,14 +20,13 @@ public class DetailResponse {
     private String sku;
     private BigDecimal price;
     private String descripcion;
-    private String name;
     private BigDecimal amount;
     private BigDecimal subtotal;
     private String discount;
 
-
+    /**
     public String toString(){
         return descripcion + " " + name;
-    }
+    }**/
 
 }

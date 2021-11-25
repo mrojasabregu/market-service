@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 
-@FeignClient(name = "product-service", url = "http://34.134.13.53")
+@FeignClient(name = "product-service", url = "http://localhost:8085")
 public interface ProductClient {
 
     @GetMapping(path = "/product/{sku}")
