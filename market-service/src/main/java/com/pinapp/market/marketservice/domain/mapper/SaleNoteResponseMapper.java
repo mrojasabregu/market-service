@@ -1,7 +1,7 @@
 package com.pinapp.market.marketservice.domain.mapper;
 
 import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
-import com.pinapp.market.marketservice.domain.model.SaleNote;
+import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,17 +15,16 @@ public class SaleNoteResponseMapper implements Function<SaleNote, SaleNoteRespon
     private DetailResponseMapper detailResponseMapper;
 
     @Override
-    public SaleNoteResponse apply(SaleNote saleNote) {
+    public SaleNoteResponse apply(SaleNote saleNote){
         return SaleNoteResponse.builder()
                 .id(saleNote.getId())
                 .orderNumber(saleNote.getOrderNumber())
                 .date(saleNote.getDate())
                 .state(saleNote.getState())
-                .documentNumber(saleNote.getDocumentNumber())
-                .documentType(saleNote.getDocumentType())
-                .idAddress(saleNote.getIdAddress())
-                .details(saleNote.getDetails().stream().map(detailResponseMapper).collect(Collectors.toList()))
+                .client(saleNote.getCustomer())
+                .address(saleNote.getAddress())
                 .total(saleNote.getTotal())
+                .details(saleNote.getDetails().stream().map(detailResponseMapper).collect(Collectors.toList()))
                 .build();
     }
 }

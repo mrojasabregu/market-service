@@ -8,8 +8,8 @@ import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
 import com.pinapp.market.marketservice.domain.mapper.DetailRequestMapper;
 import com.pinapp.market.marketservice.domain.mapper.DetailResponseMapper;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteResponseMapper;
-import com.pinapp.market.marketservice.domain.model.Detail;
-import com.pinapp.market.marketservice.domain.model.SaleNote;
+import com.pinapp.market.marketservice.domain.entity.Detail;
+import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import com.pinapp.market.marketservice.repository.DetailRepository;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.IDetailService;
@@ -68,7 +68,6 @@ public class DetailServiceImpl implements IDetailService {
             s = saleNoteRepository.save(s);
             log.info("Se cargo el DETALLE  con éxito");
             SaleNoteResponse saleNoteResponse = saleNoteResponseMapper.apply(s);
-            saleNoteResponse.getDetails().stream().forEach(d -> d.setSubtotal(d.getPrice().multiply(d.getAmount())));
             return saleNoteResponse;
         } else {
             log.error("NO se pudo mostrar el DETALLE");
@@ -78,6 +77,9 @@ public class DetailServiceImpl implements IDetailService {
 
 
     public Boolean editDetail(Long id, DetailRequest detailRequest) {
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Detail detailActu = null;
         Optional<Detail> detailBD = detailRepository.findById(id);
         if (detailBD.isPresent()) {
@@ -109,13 +111,6 @@ public class DetailServiceImpl implements IDetailService {
         Optional<Detail> d = detailRepository.findById(idDetail);
         if (d.isPresent()) {
             Detail dd = d.get();
-            Optional<SaleNote> sale = saleNoteRepository.findById(idSaleNote);
-            if (sale.isPresent()) {
-                sale.get().getDetails().remove(dd);
-            } else {
-                //TODO lanzar excepcion avisando que no existe el pedido
-                log.error("El PEDIDO no existe");
-            }
             detailRepository.delete(dd);
             log.info("Se elimino el detalle con exito");
         } else {

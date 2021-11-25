@@ -1,13 +1,12 @@
-package com.pinapp.market.marketservice.domain.model;
-
+package com.pinapp.market.marketservice.domain.entity;
+import com.pinapp.market.marketservice.controller.response.AddressResponse;
+import com.pinapp.market.marketservice.controller.response.CustomerResponse;
+import com.pinapp.market.marketservice.domain.model.Address;
 import lombok.*;
-
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,9 +23,16 @@ public class SaleNote {
     private Long orderNumber;
     private Date date;
     private String state;
+
+    @Transient
+    private CustomerResponse customer;
+
+    @Transient
+    private AddressResponse address;
+
     private String documentNumber;
     private String documentType;
-    private Long idAddress;
+    private String idAddress;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "SALE_NOTE_ID")
     private List<Detail> details;

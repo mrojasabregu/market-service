@@ -1,7 +1,7 @@
 package com.pinapp.market.marketservice.domain.mapper;
 
 import com.pinapp.market.marketservice.controller.response.DetailResponse;
-import com.pinapp.market.marketservice.domain.model.Detail;
+import com.pinapp.market.marketservice.domain.entity.Detail;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
@@ -18,7 +18,8 @@ public class DetailResponseMapper implements Function<Detail, DetailResponse> {
                 .sku(detail.getSku())
                 .price(detail.getPrice())
                 .amount(detail.getAmount())
-                .subtotal(detail.getSubtotal())
+                .product(detail.getProduct())
+                .subtotal(detail.getPrice().multiply(detail.getAmount()).setScale(2))
                 .discount(detail.getDiscount())
                 .build();
     }

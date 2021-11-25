@@ -14,12 +14,10 @@ import java.util.List;
 @Data
 public class CustomerResponse {
 
-    private String idCustomer;
     private String name;
     private String lastName;
     private String type;
     private String documentNumber;
     private String email;
     private String phone;
-    private List<AddressResponse> addresses;
 }

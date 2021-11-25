@@ -2,7 +2,7 @@ package com.pinapp.market.marketservice.domain.mapper;
 
 
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
-import com.pinapp.market.marketservice.domain.model.Detail;
+import com.pinapp.market.marketservice.domain.entity.Detail;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;

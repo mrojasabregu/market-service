@@ -15,17 +15,15 @@ import java.util.List;
 @Data
 public class ProductResponse {
 
-    private Long productId;
+
     private String sku;
     private String name;
     private String description;
     private Double price;
-    private String imgUrl;
     private Integer unitAvailable;
-    private Double weight;
     private String category;
     private String brand;
     private Integer amountToReserve;
     private Integer amountToCancel;
-    List<Keyword> keywords = new ArrayList<>();
+
 }

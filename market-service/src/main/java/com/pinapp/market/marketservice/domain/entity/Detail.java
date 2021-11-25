@@ -1,6 +1,8 @@
-package com.pinapp.market.marketservice.domain.model;
-
+package com.pinapp.market.marketservice.domain.entity;
+import com.pinapp.market.marketservice.controller.response.ProductResponse;
+import com.pinapp.market.marketservice.domain.model.Product;
 import lombok.*;
+import org.springframework.http.ResponseEntity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -22,6 +24,10 @@ public class Detail {
     private BigDecimal price;
     private BigDecimal amount;
     private BigDecimal subtotal;
+
+    @Transient
+    private Product product;
+
     private String discount;
 
 }
