@@ -5,22 +5,21 @@ import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.CustomException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
+import com.pinapp.market.marketservice.controller.request.ReserveProductRequest;
+import com.pinapp.market.marketservice.controller.response.ProductResponse;
 import com.pinapp.market.marketservice.domain.mapper.DetailRequestMapper;
 import com.pinapp.market.marketservice.domain.entity.Detail;
 import com.pinapp.market.marketservice.domain.entity.SaleNote;
-import com.pinapp.market.marketservice.domain.model.Product;
 import com.pinapp.market.marketservice.repository.DetailRepository;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.IDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -63,16 +62,15 @@ public class DetailServiceImpl implements IDetailService {
         Optional<SaleNote> sale = saleNoteRepository.findById(saleNoteId);
         if (sale.isPresent()) {
             SaleNote s = sale.get();
-            ResponseEntity<Product> product = productClient.retriveProduct(detail.getSku());
+            ProductResponse product = productClient.retriveProduct(detail.getSku());
 
-            detail.setPrice(BigDecimal.valueOf(product.getBody().getPrice()));
+            detail.setPrice(BigDecimal.valueOf(product.getPrice()));
 
-            if(product.getBody().getUnitAvailable() - detail.getAmount().intValue() < 0){
+            if(product.getUnitAvailable() - detail.getAmount().intValue() < 0){
                 throw new CustomException("Stock no disponible para Sku: " + detail.getSku() + ". La cantidad disponible es " +
-                        " de: " + product.getBody().getUnitAvailable());
+                        " de: " + product.getUnitAvailable());
             }
-
-
+            productClient.reserveProduct(new ReserveProductRequest(detail.getAmount().intValue()), detail.getSku());
 
             s.getDetails().add(detailNew);
             saleNoteRepository.save(s);

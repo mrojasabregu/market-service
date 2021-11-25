@@ -1,6 +1,5 @@
 package com.pinapp.market.marketservice.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 @AllArgsConstructor
@@ -10,7 +9,6 @@ import lombok.*;
 public class Product {
 
 
-    @JsonBackReference
     private String sku;
     private String name;
     private String description;

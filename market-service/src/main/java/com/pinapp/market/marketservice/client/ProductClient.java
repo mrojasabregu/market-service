@@ -1,5 +1,7 @@
 package com.pinapp.market.marketservice.client;
 
+import com.pinapp.market.marketservice.controller.request.ReserveProductRequest;
+import com.pinapp.market.marketservice.controller.response.ProductResponse;
 import com.pinapp.market.marketservice.domain.model.Product;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+
 import java.util.List;
 
 
@@ -16,13 +19,13 @@ import java.util.List;
 public interface ProductClient {
 
     @GetMapping(path = "/product/{sku}")
-    public ResponseEntity<Product> retriveProduct(@PathVariable("sku") String sku);
+    public ProductResponse retriveProduct(@PathVariable("sku") String sku);
 
 
 
 
-    /**
+
     @PostMapping(path = "/product/{sku}/stock/reserve")
     public ResponseEntity<List<Product>> reserveProduct(@Validated @RequestBody ReserveProductRequest reserveProductRequest, @PathVariable("sku") String sku);
-    **/
+
 }
