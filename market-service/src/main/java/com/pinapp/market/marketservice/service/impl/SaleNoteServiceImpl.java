@@ -7,21 +7,22 @@ import java.util.Optional;
 
 import com.pinapp.market.marketservice.client.AddressClient;
 import com.pinapp.market.marketservice.client.CustomerClient;
+import com.pinapp.market.marketservice.client.ProductClient;
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.CustomException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
-import com.pinapp.market.marketservice.controller.response.AddressResponse;
-import com.pinapp.market.marketservice.controller.response.CustomerResponse;
-import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
+import com.pinapp.market.marketservice.controller.response.*;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
 import com.pinapp.market.marketservice.domain.entity.Detail;
 import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteResponseMapper;
+import com.pinapp.market.marketservice.domain.model.Product;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -44,6 +45,9 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
     @Autowired
     private AddressClient addressClient;
 
+    @Autowired
+    private ProductClient productClient;
+
 
     public SaleNoteResponse getSaleNote(Long id) {
         if (id.getClass() != Long.class) {
@@ -61,6 +65,12 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
 
                 AddressResponse address = addressClient.getIdAddressByCustomerId(saleNote.get().getIdAddress());
                 saleNoteResponse.setAddress(address);
+
+                for(DetailResponse detail : saleNoteResponse.getDetails()){
+                    ResponseEntity<Product> product = productClient.retriveProduct(detail.getSku());
+
+                    detail.setProduct(product.getBody());
+                }
             } catch (Exception e) {
                 throw new CustomException("Invalid connection: " + e.getMessage());
             }

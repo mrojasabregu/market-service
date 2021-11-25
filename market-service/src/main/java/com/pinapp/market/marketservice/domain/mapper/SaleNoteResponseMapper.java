@@ -6,13 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class SaleNoteResponseMapper implements Function<SaleNote, SaleNoteResponse> {
 
-    /**
+
     @Autowired
-    private DetailResponseMapper detailResponseMapper;**/
+    private DetailResponseMapper detailResponseMapper;
 
     @Override
     public SaleNoteResponse apply(SaleNote saleNote){
@@ -23,7 +24,7 @@ public class SaleNoteResponseMapper implements Function<SaleNote, SaleNoteRespon
                 .client(saleNote.getCustomer())
                 .address(saleNote.getAddress())
                 .total(saleNote.getTotal())
-                //.details(saleNote.getDetails().stream().map(detailResponseMapper).collect(Collectors.toList()))
+                .details(saleNote.getDetails().stream().map(detailResponseMapper).collect(Collectors.toList()))
                 .build();
     }
 }
