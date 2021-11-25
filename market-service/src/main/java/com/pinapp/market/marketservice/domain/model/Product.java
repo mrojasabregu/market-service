@@ -21,4 +21,8 @@ public class Product {
     private Integer amountToReserve;
     private Integer amountToCancel;
 
+    public String toString(){
+        return description + " " + brand;
+    }
+
 }

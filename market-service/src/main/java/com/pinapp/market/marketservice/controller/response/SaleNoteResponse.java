@@ -19,6 +19,7 @@ public class SaleNoteResponse {
     private Long id;
     private Long orderNumber;
     private Date date;
+    private String state;
     private CustomerResponse client;
     private AddressResponse address;
     private BigDecimal total;
