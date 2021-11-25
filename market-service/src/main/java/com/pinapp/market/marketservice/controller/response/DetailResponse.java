@@ -18,6 +18,7 @@ public class DetailResponse {
     private Long id;
     private Integer item;
     private String sku;
+    private String descripcion;
     private BigDecimal price;
     private String descripcion;
     private BigDecimal amount;

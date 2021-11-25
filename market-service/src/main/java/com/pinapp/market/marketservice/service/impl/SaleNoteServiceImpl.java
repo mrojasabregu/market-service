@@ -1,6 +1,7 @@
 package com.pinapp.market.marketservice.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import com.pinapp.market.marketservice.client.ProductClient;
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.CustomException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
+import com.pinapp.market.marketservice.controller.request.CancelReserveProductRequest;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
 import com.pinapp.market.marketservice.controller.response.*;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
@@ -45,6 +47,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
 
     @Autowired
     private ProductClient productClient;
+
 
 
     public SaleNoteResponse getSaleNote(Long id) {
@@ -143,14 +146,18 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         if (saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
             saleNoteActu.setState("CANCELLED");
-        }
-        if (saleNoteActu != null) {
-            saleNoteRepository.save(saleNoteActu);
-            log.info("Se actualizo con éxito");
+                  saleNoteRepository.save(saleNoteActu);
+            log.info("El pedido fue cancelado");
+            List<CancelReserveProductRequest> productsCancelled = new ArrayList<CancelReserveProductRequest>();
+            saleNoteActu.getDetails().stream()
+                    .forEach(d-> productsCancelled.add(
+                            CancelReserveProductRequest.builder().sku(d.getSku()).amountToCancel(d.getAmount().intValue()).build()));
+            String rta = productClient.cancelProduct( productsCancelled);
+            log.info(rta);
             return true;
         }
 
-        log.info("El objeto no se actualizo correctamente (NULL)");
+        log.error("EL pedido no existe.");
         throw new NotFoundException("SaleNote does not exist");
     }
 

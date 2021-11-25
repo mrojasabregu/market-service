@@ -2,6 +2,7 @@ package com.pinapp.market.marketservice.client;
 
 import com.pinapp.market.marketservice.controller.request.ReserveProductRequest;
 import com.pinapp.market.marketservice.controller.response.ProductResponse;
+import com.pinapp.market.marketservice.controller.request.CancelReserveProductRequest;
 import com.pinapp.market.marketservice.domain.model.Product;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,9 @@ public interface ProductClient {
     @GetMapping(path = "/product/{sku}")
     public ProductResponse retriveProduct(@PathVariable("sku") String sku);
 
-
-
-
-
     @PostMapping(path = "/product/{sku}/stock/reserve")
     public ResponseEntity<List<Product>> reserveProduct(@Validated @RequestBody ReserveProductRequest reserveProductRequest, @PathVariable("sku") String sku);
 
+    @PostMapping(path = "/product/stock/cancelReserve")
+    public String cancelProduct(@Validated @RequestBody List<CancelReserveProductRequest> cancelRequests);
 }
