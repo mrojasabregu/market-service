@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.pinapp.market</groupId>
 	<artifactId>market-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>market-service</name>
 	<description>Pinapp shopping cart</description>
 	<properties>
