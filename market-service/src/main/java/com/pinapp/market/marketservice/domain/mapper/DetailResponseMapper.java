@@ -16,9 +16,9 @@ public class DetailResponseMapper implements Function<Detail, DetailResponse> {
                 .id(detail.getId())
                 .item(detail.getItem())
                 .sku(detail.getSku())
+                .descripcion(detail.getProduct().toString())
                 .price(detail.getPrice())
                 .amount(detail.getAmount())
-                .product(detail.getProduct())
                 .subtotal(detail.getSubtotal())
                 .discount(detail.getDiscount())
                 .build();

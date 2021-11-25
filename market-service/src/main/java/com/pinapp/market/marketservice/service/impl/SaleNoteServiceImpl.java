@@ -69,7 +69,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
                 for(DetailResponse detail : saleNoteResponse.getDetails()){
                     ResponseEntity<Product> product = productClient.retriveProduct(detail.getSku());
 
-                    detail.setProduct(product.getBody());
+                    //detail.setProduct(product.getBody());
                 }
             } catch (Exception e) {
                 throw new CustomException("Invalid connection: " + e.getMessage());
