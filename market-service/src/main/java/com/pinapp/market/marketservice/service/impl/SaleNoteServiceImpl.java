@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.pinapp.market.marketservice.client.AddressClient;
 import com.pinapp.market.marketservice.client.CustomerClient;
@@ -14,6 +15,9 @@ import com.pinapp.market.marketservice.config.exception.CustomException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.CancelReserveProductRequest;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
+import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
+import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
+import com.pinapp.market.marketservice.domain.mapper.SaleNoteResponseMapper;
 import com.pinapp.market.marketservice.controller.response.*;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
 import com.pinapp.market.marketservice.domain.entity.Detail;
@@ -34,9 +38,6 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
     private SaleNoteRequestMapper saleNoteMapper;
 
     @Autowired
-    private SaleNoteRepository saleNoteRepository;
-
-    @Autowired
     private SaleNoteResponseMapper saleNoteResponseMapper;
 
     @Autowired
@@ -46,8 +47,9 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
     private AddressClient addressClient;
 
     @Autowired
-    private ProductClient productClient;
+    private SaleNoteRepository saleNoteRepository;
 
+    private ProductClient productClient;
 
 
     public SaleNoteResponse getSaleNote(Long id) {
@@ -76,13 +78,14 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
                 throw new CustomException("Invalid connection: " + e.getMessage());
             }
             log.info("Se mostro con éxito el PEDIDO");
-            return saleNoteResponse;
+            SaleNoteResponse saleNoteR = saleNoteResponseMapper.apply(saleNote.get());
+            return saleNoteR;
         }
         log.info("No se encontro el PEDIDO");
         throw new NotFoundException("Invalid ID: SaleNote does not exist");
     }
 
-    public SaleNote createSaleNote(SaleNoteRequest saleNoteRequest) {
+    public SaleNoteResponse createSaleNote(SaleNoteRequest saleNoteRequest) {
         if (saleNoteRequest.getDate() == null || saleNoteRequest.getDocumentNumber() == null || saleNoteRequest.getDocumentType() == null || saleNoteRequest.getIdAddress() == null || saleNoteRequest.getOrderNumber() == null) {
             throw new BadRequestException("Invalid input");
         }
@@ -91,8 +94,9 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         saleNoteNew = saleNote;
         saleNoteNew.setState("INPROCESS");
         saleNoteRepository.save(saleNoteNew);
+        SaleNoteResponse saleNoteR = saleNoteResponseMapper.apply(saleNoteNew);
+        return saleNoteR;
 
-        return saleNoteNew;
     }
 
     public Boolean editSaleNote(Long id, SaleNoteRequest saleNoteRequest) {
@@ -129,12 +133,15 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         throw new NotFoundException("SaleNote does not exist");
     }
 
-    public List<SaleNote> getsSaleNotesInProcess() {
-        return saleNoteRepository.getState();
+    public List<SaleNoteResponse> getsSaleNotesInProcess() {
+        List<SaleNote> saleNotesCancelled = saleNoteRepository.getState();
+        return saleNotesCancelled.stream().map(saleNoteResponseMapper).collect(Collectors.toList());
     }
 
-    public List<SaleNote> getSaleNoteCanceled() {
-        return saleNoteRepository.getStateCanceled();
+    public List<SaleNoteResponse> getSaleNoteCanceled() {
+
+        List<SaleNote> saleNotesCancelled = saleNoteRepository.getStateCanceled();
+        return saleNotesCancelled.stream().map(saleNoteResponseMapper).collect(Collectors.toList());
     }
 
     public Boolean saleNoteCancelled(Long id) {
@@ -161,7 +168,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         throw new NotFoundException("SaleNote does not exist");
     }
 
-    public void saleNoteIssued(Long id) {
+    public void saleNoteCheckout(Long id) {
         if (id.getClass() != Long.class) {
             throw new NumberFormatException("Invalid ID");
         }
@@ -170,9 +177,10 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if (saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
+            SaleNoteResponse saleNoteResponse = saleNoteResponseMapper.apply(saleNoteActu);
             if (saleNoteActu.getDetails().size() != 0) {
-                saleNoteActu.setState("ISSUED");
-                for (Detail detail : saleNoteActu.getDetails()) {
+                saleNoteActu.setState("CHECKOUT");
+                for (DetailResponse detail : saleNoteResponse.getDetails()) {
                     subtotal = subtotal.add(detail.getSubtotal());
                 }
                 saleNoteActu.setTotal(subtotal);
