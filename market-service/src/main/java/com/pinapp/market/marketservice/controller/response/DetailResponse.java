@@ -20,7 +20,6 @@ public class DetailResponse {
     private String sku;
     private String descripcion;
     private BigDecimal price;
-    private String descripcion;
     private BigDecimal amount;
     private BigDecimal subtotal;
     private String discount;
