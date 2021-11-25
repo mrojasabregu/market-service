@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.pinapp.market.marketservice.client.AddressClient;
 import com.pinapp.market.marketservice.client.CustomerClient;
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
+import com.pinapp.market.marketservice.config.exception.CustomException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
+import com.pinapp.market.marketservice.controller.response.AddressResponse;
 import com.pinapp.market.marketservice.controller.response.CustomerResponse;
 import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
@@ -38,6 +41,9 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
     @Autowired
     private CustomerClient customerClient;
 
+    @Autowired
+    private AddressClient addressClient;
+
 
     public SaleNoteResponse getSaleNote(Long id) {
         if (id.getClass() != Long.class) {
@@ -52,14 +58,17 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
             try {
                 CustomerResponse customer = customerClient.getCustomerByDocument(hashMap);
                 saleNoteResponse.setClient(customer);
+
+                AddressResponse address = addressClient.getIdAddressByCustomerId(saleNote.get().getIdAddress());
+                saleNoteResponse.setAddress(address);
             } catch (Exception e) {
-                throw new BadRequestException("Error al buscar customer");
+                throw new CustomException("Invalid connection: " + e.getMessage());
             }
             log.info("Se mostro con éxito el PEDIDO");
             return saleNoteResponse;
         }
         log.info("No se encontro el PEDIDO");
-        throw new NotFoundException("Invalid ID");
+        throw new NotFoundException("Invalid ID: SaleNote does not exist");
     }
 
     public SaleNote createSaleNote(SaleNoteRequest saleNoteRequest) {
