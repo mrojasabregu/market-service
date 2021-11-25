@@ -72,7 +72,6 @@ public class DetailServiceImpl implements IDetailService {
                         " de: " + product.getBody().getUnitAvailable());
             }
 
-            
 
 
             s.getDetails().add(detailNew);
