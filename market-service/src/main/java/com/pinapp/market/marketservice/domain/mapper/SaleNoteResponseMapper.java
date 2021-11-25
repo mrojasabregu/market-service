@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 @Component
 public class SaleNoteResponseMapper implements Function<SaleNote, SaleNoteResponse> {
 
+
     @Autowired
     private DetailResponseMapper detailResponseMapper;
 

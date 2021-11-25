@@ -7,11 +7,7 @@ import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
 import com.pinapp.market.marketservice.controller.request.ReserveProductRequest;
 import com.pinapp.market.marketservice.controller.response.ProductResponse;
-import com.pinapp.market.marketservice.controller.response.DetailResponse;
-import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
 import com.pinapp.market.marketservice.domain.mapper.DetailRequestMapper;
-import com.pinapp.market.marketservice.domain.mapper.DetailResponseMapper;
-import com.pinapp.market.marketservice.domain.mapper.SaleNoteResponseMapper;
 import com.pinapp.market.marketservice.domain.entity.Detail;
 import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import com.pinapp.market.marketservice.repository.DetailRepository;
@@ -35,12 +31,6 @@ public class DetailServiceImpl implements IDetailService {
     private DetailRequestMapper detailMapper;
 
     @Autowired
-    private DetailResponseMapper detailResponseMapper;
-
-    @Autowired
-    private SaleNoteResponseMapper saleNoteResponseMapper;
-
-    @Autowired
     private DetailRepository detailRepository;
 
     @Autowired
@@ -50,19 +40,21 @@ public class DetailServiceImpl implements IDetailService {
     private ProductClient productClient;
 
 
-    public DetailResponse getDetail(Long id) {
+    public Detail getDetail(Long id) {
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Optional<Detail> detail = detailRepository.findById(id);
         if (detail.isPresent()) {
             log.info("Se mostro con éxito el DETALLE");
-            DetailResponse detailR = detailResponseMapper.apply(detail.get());
-            return detailR;
+            return detail.get();
         }
         log.error("NO se pudo mostrar el DETALLE");
         throw new NotFoundException("Detail does not exist");
     }
 
     @Transactional
-    public SaleNoteResponse createDetail(DetailRequest detailRequest, Long saleNoteId) {
+    public void createDetail(DetailRequest detailRequest, Long saleNoteId) {
         Detail detailNew;
         Detail detail = detailMapper.apply(detailRequest);
         detailNew = detail;
@@ -81,16 +73,13 @@ public class DetailServiceImpl implements IDetailService {
             productClient.reserveProduct(new ReserveProductRequest(detail.getAmount().intValue()), detail.getSku());
 
             s.getDetails().add(detailNew);
-            s = saleNoteRepository.save(s);
+            saleNoteRepository.save(s);
             log.info("Se cargo el DETALLE  con éxito");
-            SaleNoteResponse saleNoteResponse = saleNoteResponseMapper.apply(s);
-            return saleNoteResponse;
         } else {
             log.error("NO se pudo mostrar el DETALLE");
             throw new BadRequestException("Invalid Sale Note");
         }
     }
-
 
     public Boolean editDetail(Long id, DetailRequest detailRequest) {
         if(id.getClass() != Long.class){

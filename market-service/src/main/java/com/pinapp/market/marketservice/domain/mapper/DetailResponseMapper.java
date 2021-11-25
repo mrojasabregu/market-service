@@ -19,7 +19,6 @@ public class DetailResponseMapper implements Function<Detail, DetailResponse> {
                 .price(detail.getPrice())
                 .amount(detail.getAmount())
                 .subtotal(detail.getSubtotal())
-                .subtotal(detail.getPrice().multiply(detail.getAmount()).setScale(2))
                 .discount(detail.getDiscount())
                 .build();
     }

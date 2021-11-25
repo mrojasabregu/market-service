@@ -1,7 +1,5 @@
 package com.pinapp.market.marketservice.controller.response;
 
-
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
