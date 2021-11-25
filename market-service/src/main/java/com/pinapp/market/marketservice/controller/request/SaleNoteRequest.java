@@ -17,7 +17,7 @@ public class SaleNoteRequest {
     private Date date;
     private String documentNumber;
     private String documentType;
-    private Long idAddress;
+    private String idAddress;
     private BigDecimal total;
     private List<Detail> details;
 

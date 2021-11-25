@@ -20,7 +20,8 @@ public class SaleNoteResponse {
     private Long orderNumber;
     private Date date;
     private CustomerResponse client;
+    private AddressResponse address;
     private BigDecimal total;
     private List<DetailResponse> details;
-    private Address address;
+
 }
