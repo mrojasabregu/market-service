@@ -1,7 +1,7 @@
 
 package com.pinapp.market.marketservice.controller.request;
 
-import com.pinapp.market.marketservice.domain.model.SaleNote;
+import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,6 +18,4 @@ public class DetailRequest {
     private BigDecimal price;
     private BigDecimal amount;
     private String discount;
-    private BigDecimal subtotal;
-
 }

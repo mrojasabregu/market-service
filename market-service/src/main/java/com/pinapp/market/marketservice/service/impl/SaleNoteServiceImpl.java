@@ -2,15 +2,22 @@ package com.pinapp.market.marketservice.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.pinapp.market.marketservice.client.AddressClient;
+import com.pinapp.market.marketservice.client.CustomerClient;
+import com.pinapp.market.marketservice.client.ProductClient;
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
+import com.pinapp.market.marketservice.config.exception.CustomException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
+import com.pinapp.market.marketservice.controller.request.CancelReserveProductRequest;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
-import com.pinapp.market.marketservice.domain.mapper.SaleNoteMapper;
-import com.pinapp.market.marketservice.domain.model.Detail;
-import com.pinapp.market.marketservice.domain.model.SaleNote;
+import com.pinapp.market.marketservice.controller.response.*;
+import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
+import com.pinapp.market.marketservice.domain.entity.SaleNote;
+import com.pinapp.market.marketservice.domain.mapper.SaleNoteResponseMapper;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,23 +30,56 @@ import org.springframework.stereotype.Service;
 public class SaleNoteServiceImpl implements ISaleNoteService {
 
     @Autowired
-    private SaleNoteMapper saleNoteMapper;
+    private SaleNoteRequestMapper saleNoteMapper;
 
     @Autowired
     private SaleNoteRepository saleNoteRepository;
 
+    @Autowired
+    private SaleNoteResponseMapper saleNoteResponseMapper;
 
-    public SaleNote getSaleNote(Long id) {
+    @Autowired
+    private CustomerClient customerClient;
+
+    @Autowired
+    private AddressClient addressClient;
+
+    @Autowired
+    private ProductClient productClient;
+
+
+
+    public SaleNoteResponse getSaleNote(Long id) {
         if (id.getClass() != Long.class) {
             throw new NumberFormatException("Invalid ID supplied");
         }
         Optional<SaleNote> saleNote = saleNoteRepository.findById(id);
         if (saleNote.isPresent()) {
+            SaleNoteResponse saleNoteResponse = saleNoteResponseMapper.apply(saleNote.get());
+            HashMap hashMap = new HashMap<String, String>();
+            hashMap.put("doc_type", saleNote.get().getDocumentType());
+            hashMap.put("doc_numb", saleNote.get().getDocumentNumber());
+            try {
+                CustomerResponse customer = customerClient.getCustomerByDocument(hashMap);
+                saleNoteResponse.setClient(customer);
+
+                AddressResponse address = addressClient.getIdAddressByCustomerId(saleNote.get().getIdAddress());
+                saleNoteResponse.setAddress(address);
+
+                for (DetailResponse detail : saleNoteResponse.getDetails()) {
+                    ProductResponse product = productClient.retriveProduct(detail.getSku());
+
+                    detail.setDescripcion(product.getName() + ", " + product.getBrand() + ", " + product.getDescription());
+                    detail.setSubtotal(detail.getPrice().multiply(detail.getAmount()));
+                }
+            } catch (Exception e) {
+                throw new CustomException("Invalid connection: " + e.getMessage());
+            }
             log.info("Se mostro con éxito el PEDIDO");
-            return saleNote.get();
+            return saleNoteResponse;
         }
         log.info("No se encontro el PEDIDO");
-        throw new NotFoundException("Invalid ID");
+        throw new NotFoundException("Invalid ID: SaleNote does not exist");
     }
 
     public SaleNote createSaleNote(SaleNoteRequest saleNoteRequest) {
@@ -106,18 +146,22 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         if (saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
             saleNoteActu.setState("CANCELLED");
-        }
-        if (saleNoteActu != null) {
-            saleNoteRepository.save(saleNoteActu);
-            log.info("Se actualizo con éxito");
+                  saleNoteRepository.save(saleNoteActu);
+            log.info("El pedido fue cancelado");
+            List<CancelReserveProductRequest> productsCancelled = new ArrayList<CancelReserveProductRequest>();
+            saleNoteActu.getDetails().stream()
+                    .forEach(d-> productsCancelled.add(
+                            CancelReserveProductRequest.builder().sku(d.getSku()).amountToCancel(d.getAmount().intValue()).build()));
+            String rta = productClient.cancelProduct( productsCancelled);
+            log.info(rta);
             return true;
         }
 
-        log.info("El objeto no se actualizo correctamente (NULL)");
+        log.error("EL pedido no existe.");
         throw new NotFoundException("SaleNote does not exist");
     }
 
-    public void saleNoteIssued(Long id) {
+    public void saleNoteCheckout(Long id) {
         if (id.getClass() != Long.class) {
             throw new NumberFormatException("Invalid ID");
         }
@@ -126,16 +170,18 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if (saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
+            SaleNoteResponse saleNoteResponse = saleNoteResponseMapper.apply(saleNoteActu);
             if (saleNoteActu.getDetails().size() != 0) {
-                saleNoteActu.setState("ISSUED");
-                for (Detail detail : saleNoteActu.getDetails()) {
+                saleNoteActu.setState("CHECKOUT");
+                for (DetailResponse detail : saleNoteResponse.getDetails()) {
+                    detail.setSubtotal(detail.getPrice().multiply(detail.getAmount()));
                     subtotal = subtotal.add(detail.getSubtotal());
                 }
                 saleNoteActu.setTotal(subtotal);
 
             } else {
                 log.error("El pedido debe contener al menos un detalle para poder emitirse");
-                throw new BadRequestException("The list must contain at least 1 detail.");
+                throw new BadRequestException("The list must contain at least 1 detail");
             }
             if (saleNoteActu != null) {
                 saleNoteRepository.save(saleNoteActu);
