@@ -1,5 +1,5 @@
-package com.pinapp.market.marketservice.domain.model;
-
+package com.pinapp.market.marketservice.domain.entity;
+import com.pinapp.market.marketservice.controller.response.ProductResponse;
 import lombok.*;
 
 import javax.persistence.*;

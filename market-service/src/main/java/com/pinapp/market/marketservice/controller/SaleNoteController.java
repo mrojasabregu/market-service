@@ -1,14 +1,18 @@
 package com.pinapp.market.marketservice.controller;
 
 
-import com.pinapp.market.marketservice.config.exception.NumberFormatException;
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
-import com.pinapp.market.marketservice.domain.model.SaleNote;
-import com.pinapp.market.marketservice.domain.model.Detail;
+import com.pinapp.market.marketservice.controller.response.SaleNoteResponse;
+import com.pinapp.market.marketservice.domain.entity.SaleNote;
+import com.pinapp.market.marketservice.domain.entity.Detail;
 import com.pinapp.market.marketservice.service.IDetailService;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +32,20 @@ public class SaleNoteController {
     private ISaleNoteService saleNoteService;
 
 
-    @Operation (summary = "Devuelve el detalle de compra de un item del pedido")
+    @Operation(summary = "Devuelve el detalle de compra de un item del pedido")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Detail.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Detail not found",
+                    content = @Content) })
     @GetMapping(path = "/detail/{idDetail}")
-    public Detail retrieveDetail(@PathVariable("idDetail") Long idDetail) {
-        return detailService.getDetail(idDetail);
+    public Detail retrieveDetail(@PathVariable("idDetail") Long id) {
+        return detailService.getDetail(id);
     }
+
 
     @Operation (summary = "Genera un detalle de compra en el pedido")
     @PostMapping(path = "/{saleNoteId}/detail")
@@ -49,7 +62,7 @@ public class SaleNoteController {
 
     @Operation( summary = "Elimina un detalle de un pedido determinado")
     @DeleteMapping(path = "/{idSaleNote}/detail/{idDetail}")
-    public String deleteDetail(@PathVariable Long idSaleNote, @PathVariable Long idDetail) {
+    public Boolean deleteDetail(@PathVariable Long idSaleNote, @PathVariable Long idDetail) {
         return this.detailService.deleteDetail(idSaleNote, idDetail);
     }
 
@@ -61,7 +74,7 @@ public class SaleNoteController {
     }
 
     @GetMapping(path = "/{id}")
-    public SaleNote retriveSaleNote(@PathVariable("id") Long id) {
+    public SaleNoteResponse retriveSaleNote(@PathVariable("id") Long id) {
         return saleNoteService.getSaleNote(id);
     }
 
@@ -80,14 +93,14 @@ public class SaleNoteController {
         return saleNoteService.getSaleNoteCanceled();
     }
 
-    @GetMapping(path = "/{id}/cancel")
+    @PutMapping(path = "/{id}/cancel")
     public Boolean saleNoteCancelled(@PathVariable("id") Long id) {
         return saleNoteService.saleNoteCancelled(id);
     }
 
-    @GetMapping(path = "/{id}/issue")
-    public void saleNoteIssued(@PathVariable("id") Long id) {
-        saleNoteService.saleNoteIssued(id);
+    @PutMapping(path = "/{idSaleNote}/checkout")
+    public void saleNoteCheckout(@PathVariable("idSaleNote") Long id) {
+        saleNoteService.saleNoteCheckout(id);
     }
 
 

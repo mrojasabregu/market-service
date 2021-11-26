@@ -1,11 +1,15 @@
 package com.pinapp.market.marketservice.service.impl;
 
+import com.pinapp.market.marketservice.client.ProductClient;
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
+import com.pinapp.market.marketservice.config.exception.CustomException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.DetailRequest;
-import com.pinapp.market.marketservice.domain.mapper.DetailMapper;
-import com.pinapp.market.marketservice.domain.model.Detail;
-import com.pinapp.market.marketservice.domain.model.SaleNote;
+import com.pinapp.market.marketservice.controller.request.ReserveProductRequest;
+import com.pinapp.market.marketservice.controller.response.ProductResponse;
+import com.pinapp.market.marketservice.domain.mapper.DetailRequestMapper;
+import com.pinapp.market.marketservice.domain.entity.Detail;
+import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import com.pinapp.market.marketservice.repository.DetailRepository;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.IDetailService;
@@ -15,7 +19,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Slf4j
@@ -24,7 +28,7 @@ public class DetailServiceImpl implements IDetailService {
 
 
     @Autowired
-    private DetailMapper detailMapper;
+    private DetailRequestMapper detailMapper;
 
     @Autowired
     private DetailRepository detailRepository;
@@ -32,8 +36,14 @@ public class DetailServiceImpl implements IDetailService {
     @Autowired
     private SaleNoteRepository saleNoteRepository;
 
+    @Autowired
+    private ProductClient productClient;
+
 
     public Detail getDetail(Long id) {
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Optional<Detail> detail = detailRepository.findById(id);
         if (detail.isPresent()) {
             log.info("Se mostro con éxito el DETALLE");
@@ -45,6 +55,9 @@ public class DetailServiceImpl implements IDetailService {
 
     @Transactional
     public void createDetail(DetailRequest detailRequest, Long saleNoteId) {
+        if(saleNoteId.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Detail detailNew;
         Detail detail = detailMapper.apply(detailRequest);
         detailNew = detail;
@@ -52,6 +65,17 @@ public class DetailServiceImpl implements IDetailService {
         Optional<SaleNote> sale = saleNoteRepository.findById(saleNoteId);
         if (sale.isPresent()) {
             SaleNote s = sale.get();
+            ProductResponse product = productClient.retriveProduct(detail.getSku());
+
+            detail.setPrice(BigDecimal.valueOf(product.getPrice()));
+
+            if(product.getUnitAvailable() - detail.getAmount().intValue() < 0){
+                log.error("Stock insuficiente.");
+                throw new CustomException("Stock no disponible para Sku: " + detail.getSku() + ". La cantidad disponible es " +
+                        " de: " + product.getUnitAvailable());
+            }
+            productClient.reserveProduct(new ReserveProductRequest(detail.getAmount().intValue()), detail.getSku());
+
             s.getDetails().add(detailNew);
             saleNoteRepository.save(s);
             log.info("Se cargo el DETALLE  con éxito");
@@ -62,6 +86,9 @@ public class DetailServiceImpl implements IDetailService {
     }
 
     public Boolean editDetail(Long id, DetailRequest detailRequest) {
+        if(id.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Detail detailActu = null;
         Optional<Detail> detailBD = detailRepository.findById(id);
         if (detailBD.isPresent()) {
@@ -76,31 +103,29 @@ public class DetailServiceImpl implements IDetailService {
             if (detailRequest.getAmount() != null) detailActu.setAmount(detailRequest.getAmount());
             if (detailRequest.getDiscount() != null) detailActu.setDiscount(detailRequest.getDiscount());
 
-        }
-        if (detailActu != null) {
             detailRepository.save(detailActu);
             log.info("Se actualizo el DETALLE con éxito");
             return true;
         }
-        //TODO excepcion
         log.error("El DETALLE no se actualizo correctamente (NULL)");
-        return false;
+        throw new NotFoundException("Detail does not exist");
     }
 
     @Transactional
     @Modifying
-    public String deleteDetail(Long idSaleNote, Long idDetail) {
+    public Boolean deleteDetail(Long idSaleNote, Long idDetail) {
+        if(idSaleNote.getClass() != Long.class && idDetail.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Optional<Detail> d = detailRepository.findById(idDetail);
         if (d.isPresent()) {
             Detail dd = d.get();
             detailRepository.delete(dd);
             log.info("Se elimino el detalle con exito");
+            return true;
         } else {
             log.error("no se encontro el detalle para ser eliminado");
-            // TODO: lanzar una excepcion
+            throw new NotFoundException("Detail does not exist");
         }
-        return null;
     }
-
-
 }

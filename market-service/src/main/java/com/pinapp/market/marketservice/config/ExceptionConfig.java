@@ -1,6 +1,7 @@
 package com.pinapp.market.marketservice.config;
 
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
+import com.pinapp.market.marketservice.config.exception.CustomException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,10 @@ public class ExceptionConfig {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> genericException(Exception e){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<?> customExeption(Exception e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }

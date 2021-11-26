@@ -2,6 +2,11 @@ server:
   port: ${APPLICATION_PORT:8080}
 
 spring:
+  spring:
+    cloud:
+      loadbalancer:
+        ribbon:
+          enable: false
   application:
     name: market-service
   datasource:
@@ -19,8 +24,11 @@ spring:
       hibernate.format_sql: true
 
 
+
 logging:
   level:
     org:
       hibernate:
         type: trace
+
+
