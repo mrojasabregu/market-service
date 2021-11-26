@@ -15,13 +15,17 @@ import com.pinapp.market.marketservice.config.exception.NotFoundException;
 import com.pinapp.market.marketservice.controller.request.CancelReserveProductRequest;
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
 import com.pinapp.market.marketservice.controller.response.*;
+import com.pinapp.market.marketservice.domain.mapper.ProductResponseMapper;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
+import com.pinapp.market.marketservice.domain.entity.Detail;
 import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteResponseMapper;
+import com.pinapp.market.marketservice.domain.model.Product;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -39,6 +43,9 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
     private SaleNoteResponseMapper saleNoteResponseMapper;
 
     @Autowired
+    private ProductResponseMapper productResponseMapper;
+
+    @Autowired
     private CustomerClient customerClient;
 
     @Autowired
@@ -53,8 +60,8 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         if (id.getClass() != Long.class) {
             throw new NumberFormatException("Invalid ID supplied");
         }
-        Optional<SaleNote> saleNote = saleNoteRepository.findById(id);
-        if (saleNote.isPresent()) {
+        Optional<SaleNote> saleNote =  saleNoteRepository.findById(id);
+        if(saleNote.isPresent()) {
             SaleNoteResponse saleNoteResponse = saleNoteResponseMapper.apply(saleNote.get());
             HashMap hashMap = new HashMap<String, String>();
             hashMap.put("doc_type", saleNote.get().getDocumentType());
@@ -66,11 +73,12 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
                 AddressResponse address = addressClient.getIdAddressByCustomerId(saleNote.get().getIdAddress());
                 saleNoteResponse.setAddress(address);
 
-                for (DetailResponse detail : saleNoteResponse.getDetails()) {
-                    ProductResponse product = productClient.retriveProduct(detail.getSku());
+                for(DetailResponse detail : saleNoteResponse.getDetails()){
+                    ResponseEntity<Product> product = productClient.retriveProduct(detail.getSku());
 
-                    detail.setDescripcion(product.getName() + ", " + product.getBrand() + ", " + product.getDescription());
-                    detail.setSubtotal(detail.getPrice().multiply(detail.getAmount()));
+                    ProductResponse productResponse = productResponseMapper.apply(product.getBody());
+
+                    detail.setProduct(productResponse);
                 }
             } catch (Exception e) {
                 throw new CustomException("Invalid connection: " + e.getMessage());

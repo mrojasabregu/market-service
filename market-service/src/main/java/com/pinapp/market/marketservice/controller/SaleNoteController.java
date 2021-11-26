@@ -9,7 +9,6 @@ import com.pinapp.market.marketservice.domain.entity.Detail;
 import com.pinapp.market.marketservice.service.IDetailService;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
 import io.swagger.v3.oas.annotations.Operation;
-import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -76,8 +75,7 @@ public class SaleNoteController {
     }
 
     @GetMapping(path = "/{id}")
-    public SaleNote retriveSaleNote(@PathVariable("id") Long id) {
-        log.info("Call to retriveSaleNote");
+    public SaleNoteResponse retriveSaleNote(@PathVariable("id") Long id) {
         return saleNoteService.getSaleNote(id);
     }
 

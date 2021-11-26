@@ -18,11 +18,16 @@ import java.util.List;
 public interface ProductClient {
 
     @GetMapping(path = "/product/{sku}")
-    public ProductResponse retriveProduct(@PathVariable("sku") String sku);
+    public ResponseEntity<Product> retriveProduct(@PathVariable("sku") String sku);
 
+
+
+
+    /**
     @PostMapping(path = "/product/{sku}/stock/reserve")
-    public ResponseEntity<List<Product>> reserveProduct(
-            @Validated @RequestBody ReserveProductRequest reserveProductRequest, @PathVariable("sku") String sku);
+    public ResponseEntity<List<Product>> reserveProduct(@Validated @RequestBody ReserveProductRequest reserveProductRequest, @PathVariable("sku") String sku);
+    **/
+
 
     @PostMapping(path = "/product/stock/cancelReserve")
     public String cancelProduct(@Validated @RequestBody List<CancelReserveProductRequest> cancelRequests);

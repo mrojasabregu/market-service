@@ -1,11 +1,13 @@
 package com.pinapp.market.marketservice.controller.response;
 
-
+import com.pinapp.market.marketservice.domain.entity.SaleNote;
+import com.pinapp.market.marketservice.domain.model.Product;
+import feign.Response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 
@@ -21,6 +23,7 @@ public class DetailResponse {
     private String descripcion;
     private BigDecimal price;
     private BigDecimal amount;
+    private ProductResponse product;
     private BigDecimal subtotal;
     private String discount;
 

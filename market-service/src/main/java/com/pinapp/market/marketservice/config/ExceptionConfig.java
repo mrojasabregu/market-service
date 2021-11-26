@@ -3,6 +3,7 @@ package com.pinapp.market.marketservice.config;
 import com.pinapp.market.marketservice.config.exception.BadRequestException;
 import com.pinapp.market.marketservice.config.exception.CustomException;
 import com.pinapp.market.marketservice.config.exception.NotFoundException;
+import com.pinapp.market.marketservice.domain.model.Customer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
