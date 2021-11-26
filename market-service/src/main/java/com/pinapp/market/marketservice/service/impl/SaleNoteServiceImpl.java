@@ -16,7 +16,6 @@ import com.pinapp.market.marketservice.controller.request.CancelReserveProductRe
 import com.pinapp.market.marketservice.controller.request.SaleNoteRequest;
 import com.pinapp.market.marketservice.controller.response.*;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteRequestMapper;
-import com.pinapp.market.marketservice.domain.entity.Detail;
 import com.pinapp.market.marketservice.domain.entity.SaleNote;
 import com.pinapp.market.marketservice.domain.mapper.SaleNoteResponseMapper;
 import com.pinapp.market.marketservice.repository.SaleNoteRepository;

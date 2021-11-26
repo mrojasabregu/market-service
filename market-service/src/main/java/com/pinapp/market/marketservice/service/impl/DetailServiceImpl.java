@@ -67,6 +67,7 @@ public class DetailServiceImpl implements IDetailService {
             detail.setPrice(BigDecimal.valueOf(product.getPrice()));
 
             if(product.getUnitAvailable() - detail.getAmount().intValue() < 0){
+                log.error("Stock insuficiente.");
                 throw new CustomException("Stock no disponible para Sku: " + detail.getSku() + ". La cantidad disponible es " +
                         " de: " + product.getUnitAvailable());
             }
