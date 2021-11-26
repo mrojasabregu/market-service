@@ -182,7 +182,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
 
             } else {
                 log.error("El pedido debe contener al menos un detalle para poder emitirse");
-                throw new BadRequestException("The list must contain at least 1 detail.");
+                throw new BadRequestException("The list must contain at least 1 detail");
             }
             if (saleNoteActu != null) {
                 saleNoteRepository.save(saleNoteActu);
