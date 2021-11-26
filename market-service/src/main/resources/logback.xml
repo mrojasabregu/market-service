@@ -14,8 +14,6 @@
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
-    <logger name="org.hibernate.engine.jdbc.spi" level="INFO"/>
-    <logger name="org.hibernate.validator" level="WARN"/>
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>
     </contextListener>

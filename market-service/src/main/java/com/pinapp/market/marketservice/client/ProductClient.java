@@ -12,18 +12,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 import java.util.List;
 
-
-@FeignClient(name = "product-service", url = "http://localhost:8085")
+@FeignClient(name = "product-service", url = "http://34.134.13.53")
 public interface ProductClient {
 
     @GetMapping(path = "/product/{sku}")
     public ProductResponse retriveProduct(@PathVariable("sku") String sku);
 
     @PostMapping(path = "/product/{sku}/stock/reserve")
-    public ResponseEntity<List<Product>> reserveProduct(@Validated @RequestBody ReserveProductRequest reserveProductRequest, @PathVariable("sku") String sku);
+    public ResponseEntity<List<Product>> reserveProduct(
+            @Validated @RequestBody ReserveProductRequest reserveProductRequest, @PathVariable("sku") String sku);
 
     @PostMapping(path = "/product/stock/cancelReserve")
     public String cancelProduct(@Validated @RequestBody List<CancelReserveProductRequest> cancelRequests);
