@@ -9,6 +9,7 @@ import com.pinapp.market.marketservice.domain.model.Detail;
 import com.pinapp.market.marketservice.service.IDetailService;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*") // acceso desde distintos origenes
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/saleNote")
 public class SaleNoteController {
@@ -62,6 +64,7 @@ public class SaleNoteController {
 
     @GetMapping(path = "/{id}")
     public SaleNote retriveSaleNote(@PathVariable("id") Long id) {
+        log.info("Call to retriveSaleNote");
         return saleNoteService.getSaleNote(id);
     }
 

@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  market-service:
+    image: market-service
+    container_name: market-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:8080"
+    restart: always

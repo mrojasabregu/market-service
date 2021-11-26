@@ -17,7 +17,11 @@ filebeat.autodiscover:
                     fields: ["message"]
                     target: ""
                     overwrite_keys: true
-output.elasticsearch:
-  host: ["elasticsearch:9200"]
-
+output:
+  elasticsearch:
+    hosts: [ "elasticsearch:9200"]
+    username: "elastic"
+    password: "password123"
+setup.kibana:
+  host: "kibana:5601"
 logging.metrics.enabled: true
