@@ -24,9 +24,4 @@ public class DetailResponse {
     private BigDecimal subtotal;
     private String discount;
 
-    /**
-    public String toString(){
-        return descripcion + " " + name;
-    }**/
-
 }

@@ -93,14 +93,14 @@ public class SaleNoteController {
         return saleNoteService.getSaleNoteCanceled();
     }
 
-    @GetMapping(path = "/{id}/cancel")
+    @PutMapping(path = "/{id}/cancel")
     public Boolean saleNoteCancelled(@PathVariable("id") Long id) {
         return saleNoteService.saleNoteCancelled(id);
     }
 
-    @GetMapping(path = "/{id}/issue")
-    public void saleNoteIssued(@PathVariable("id") Long id) {
-        saleNoteService.saleNoteIssued(id);
+    @PutMapping(path = "/{idSaleNote}/checkout")
+    public void saleNoteCheckout(@PathVariable("idSaleNote") Long id) {
+        saleNoteService.saleNoteCheckout(id);
     }
 
 

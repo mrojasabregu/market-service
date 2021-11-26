@@ -20,5 +20,5 @@ public interface ISaleNoteService {
 
     Boolean saleNoteCancelled(Long id);
 
-    void saleNoteIssued(Long id);
+    void saleNoteCheckout(Long id);
 }

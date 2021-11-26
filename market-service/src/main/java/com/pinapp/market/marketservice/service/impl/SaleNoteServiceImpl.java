@@ -71,6 +71,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
                     ProductResponse product = productClient.retriveProduct(detail.getSku());
 
                     detail.setDescripcion(product.getName() + ", " + product.getBrand() + ", " + product.getDescription());
+                    detail.setSubtotal(detail.getPrice().multiply(detail.getAmount()));
                 }
             } catch (Exception e) {
                 throw new CustomException("Invalid connection: " + e.getMessage());
@@ -161,7 +162,7 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         throw new NotFoundException("SaleNote does not exist");
     }
 
-    public void saleNoteIssued(Long id) {
+    public void saleNoteCheckout(Long id) {
         if (id.getClass() != Long.class) {
             throw new NumberFormatException("Invalid ID");
         }
@@ -170,9 +171,11 @@ public class SaleNoteServiceImpl implements ISaleNoteService {
         Optional<SaleNote> saleNoteBD = saleNoteRepository.findById(id);
         if (saleNoteBD.isPresent()) {
             saleNoteActu = saleNoteBD.get();
+            SaleNoteResponse saleNoteResponse = saleNoteResponseMapper.apply(saleNoteActu);
             if (saleNoteActu.getDetails().size() != 0) {
-                saleNoteActu.setState("ISSUED");
-                for (Detail detail : saleNoteActu.getDetails()) {
+                saleNoteActu.setState("CHECKOUT");
+                for (DetailResponse detail : saleNoteResponse.getDetails()) {
+                    detail.setSubtotal(detail.getPrice().multiply(detail.getAmount()));
                     subtotal = subtotal.add(detail.getSubtotal());
                 }
                 saleNoteActu.setTotal(subtotal);
