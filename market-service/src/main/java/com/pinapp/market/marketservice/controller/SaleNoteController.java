@@ -9,6 +9,7 @@ import com.pinapp.market.marketservice.domain.entity.Detail;
 import com.pinapp.market.marketservice.service.IDetailService;
 import com.pinapp.market.marketservice.service.ISaleNoteService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*") // acceso desde distintos origenes
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/saleNote")
 public class SaleNoteController {
@@ -74,7 +76,8 @@ public class SaleNoteController {
     }
 
     @GetMapping(path = "/{id}")
-    public SaleNoteResponse retriveSaleNote(@PathVariable("id") Long id) {
+    public SaleNote retriveSaleNote(@PathVariable("id") Long id) {
+        log.info("Call to retriveSaleNote");
         return saleNoteService.getSaleNote(id);
     }
 
