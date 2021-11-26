@@ -12,5 +12,5 @@ public interface IDetailService {
 
     Boolean editDetail(Long id, DetailRequest detailRequest);
 
-    String deleteDetail(Long idSaleNote, Long idDetail);
+    Boolean deleteDetail(Long idSaleNote, Long idDetail);
 }

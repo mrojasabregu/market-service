@@ -55,6 +55,9 @@ public class DetailServiceImpl implements IDetailService {
 
     @Transactional
     public void createDetail(DetailRequest detailRequest, Long saleNoteId) {
+        if(saleNoteId.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Detail detailNew;
         Detail detail = detailMapper.apply(detailRequest);
         detailNew = detail;
@@ -100,31 +103,29 @@ public class DetailServiceImpl implements IDetailService {
             if (detailRequest.getAmount() != null) detailActu.setAmount(detailRequest.getAmount());
             if (detailRequest.getDiscount() != null) detailActu.setDiscount(detailRequest.getDiscount());
 
-        }
-        if (detailActu != null) {
             detailRepository.save(detailActu);
             log.info("Se actualizo el DETALLE con éxito");
             return true;
         }
-        //TODO excepcion
         log.error("El DETALLE no se actualizo correctamente (NULL)");
-        return false;
+        throw new NotFoundException("Detail does not exist");
     }
 
     @Transactional
     @Modifying
-    public String deleteDetail(Long idSaleNote, Long idDetail) {
+    public Boolean deleteDetail(Long idSaleNote, Long idDetail) {
+        if(idSaleNote.getClass() != Long.class && idDetail.getClass() != Long.class){
+            throw new NumberFormatException("Invalid ID");
+        }
         Optional<Detail> d = detailRepository.findById(idDetail);
         if (d.isPresent()) {
             Detail dd = d.get();
             detailRepository.delete(dd);
             log.info("Se elimino el detalle con exito");
+            return true;
         } else {
             log.error("no se encontro el detalle para ser eliminado");
-            // TODO: lanzar una excepcion
+            throw new NotFoundException("Detail does not exist");
         }
-        return null;
     }
-
-
 }

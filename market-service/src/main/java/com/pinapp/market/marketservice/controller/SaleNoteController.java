@@ -62,7 +62,7 @@ public class SaleNoteController {
 
     @Operation( summary = "Elimina un detalle de un pedido determinado")
     @DeleteMapping(path = "/{idSaleNote}/detail/{idDetail}")
-    public String deleteDetail(@PathVariable Long idSaleNote, @PathVariable Long idDetail) {
+    public Boolean deleteDetail(@PathVariable Long idSaleNote, @PathVariable Long idDetail) {
         return this.detailService.deleteDetail(idSaleNote, idDetail);
     }
 

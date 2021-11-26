@@ -22,10 +22,6 @@ public class Detail {
     private BigDecimal price;
     private BigDecimal amount;
     private BigDecimal subtotal;
-
-    @Transient
-    private ProductResponse product;
-
     private String discount;
 
 }

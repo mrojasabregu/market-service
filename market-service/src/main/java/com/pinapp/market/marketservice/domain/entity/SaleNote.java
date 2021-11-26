@@ -22,13 +22,6 @@ public class SaleNote {
     private Long orderNumber;
     private Date date;
     private String state;
-
-    @Transient
-    private CustomerResponse customer;
-
-    @Transient
-    private AddressResponse address;
-
     private String documentNumber;
     private String documentType;
     private String idAddress;
