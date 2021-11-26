@@ -1,6 +1,7 @@
 filebeat.autodiscover:
   providers:
     - type: docker
+      labels.dedot: true
       templates:
         - condition:
             contains:
@@ -9,7 +10,7 @@ filebeat.autodiscover:
             - type: container
               format: docker
               paths:
-                - "var/lib/docker/containers/${data.docker.container.id}/*.log"
+                - "/var/lib/containers/${data.docker.container.id}/*.log"
               processors:
                 - decode_json_fields:
                     when.equals:
@@ -17,7 +18,11 @@ filebeat.autodiscover:
                     fields: ["message"]
                     target: ""
                     overwrite_keys: true
-output.elasticsearch:
-  host: ["elasticsearch:9200"]
-
+output:
+  elasticsearch:
+    hosts: [ "elasticsearch:9200"]
+    username: "elastic"
+    password: "password123"
+setup.kibana:
+  host: "kibana:5601"
 logging.metrics.enabled: true
