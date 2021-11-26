@@ -5,16 +5,19 @@ services:
     ports:
       - 9200:9200
     environment:
-     discovery.type: single-node
-     ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-     ELASTIC_USERNAME: elastic
-     ELASTIC_PASSWORD: password123
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_USERNAME: elastic
+      ELASTIC_PASSWORD: password123
+      xpack.security.enabled: "true"
+
   kibana:
     image: docker.elastic.co/kibana/kibana:7.7.0
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
       ELASTICSEARCH_USERNAME: elastic
       ELASTICSEARCH_PASSWORD: password123
+
     ports:
       - 5601:5601
     restart: on-failure
@@ -48,4 +51,6 @@ services:
     ports:
       - "80:8080"
     restart: always
-
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
